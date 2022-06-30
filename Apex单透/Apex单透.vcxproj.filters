@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Driver">
+      <UniqueIdentifier>{0e53b365-a30e-4c11-ba4b-62adc2c352ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{2a6199d3-3bfe-47ef-a0e6-4df477210026}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="config.h" />
+    <ClInclude Include="function.h" />
+    <ClInclude Include="vector.h" />
+    <ClInclude Include="xor.h" />
+    <ClInclude Include="util.h" />
+    <ClInclude Include="aimbot.h" />
+    <ClInclude Include="Driver\MemOperations.h">
+      <Filter>Driver</Filter>
+    </ClInclude>
+    <ClInclude Include="Driver\utils.h">
+      <Filter>Driver</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="QR_Verify.hpp" />
+    <ClInclude Include="glow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="offset.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Apex单透.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="D:\Apex hack\ICO\r5apex.ico" />
+    <Image Include="..\..\..\ICO\apexH.ico" />
+  </ItemGroup>
+</Project>
