@@ -271,15 +271,6 @@ int main(int argCount, char** argVector)
 	if (QR)
 	{
 		//SetConsoleTitleA(Util::RandomString(16).c_str());
-		if (int returnvalue = Init()) //driver handle and process Ids
-		{
-			if (returnvalue == DRIVER_NOT_LOADED)
-				std::cout << "Driver not loaded\n";
-			if (returnvalue == PROCESS_NOT_FOUND)
-				std::cout << "Process not found\n";
-			system("pause");
-			return 0;
-		}
 		srand(time(NULL));
 		std::string filePath = argVector[0];
 		Util::RenameFile(filePath);
@@ -294,6 +285,15 @@ int main(int argCount, char** argVector)
 		while (!(dwProcessId = Util::GetProcessId(dwProcessName)))
 			Sleep(1000);
 
+		if (int returnvalue = Init()) //driver handle and process Ids
+		{
+			if (returnvalue == DRIVER_NOT_LOADED)
+				std::cout << "Driver not loaded\n";
+			if (returnvalue == PROCESS_NOT_FOUND)
+				std::cout << "Process not found\n";
+			system("pause");
+			return 0;
+		}
 
 		//获取基模块地址
 		while (dwProcess_Base == 0)
