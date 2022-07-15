@@ -161,8 +161,9 @@
     <ClInclude Include="function.h" />
     <ClInclude Include="glow.h" />
     <ClInclude Include="offset.h" />
-    <ClInclude Include="QR_Verify.hpp" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="Tools\QR_Verify.hpp" />
+    <ClInclude Include="Tools\verify.h" />
     <ClInclude Include="util.h" />
     <ClInclude Include="vector.h" />
     <ClInclude Include="xor.h" />

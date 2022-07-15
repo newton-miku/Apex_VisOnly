@@ -3,7 +3,7 @@
 
 #define GAME_PROCESS_NAME L"r5apex.exe"
 #define TEST_PROCESS_NAME L"EasyAntiCheat_launcher.exe"
-#define DRIVER_FILENAMEW "\\\\.\\NewtonG"
+#define DRIVER_FILENAMEW "\\\\.\\Newton39G"
 //#define DRIVER_FILENAMEW "\\\\.\\Fafaki"
 #define IO_READorWRITE_REQUEST CTL_CODE(FILE_DEVICE_UNKNOWN, 0x0391, METHOD_BUFFERED, FILE_SPECIAL_ACCESS)
 #define IO_GET_BASE1 CTL_CODE(FILE_DEVICE_UNKNOWN, 0x0392, METHOD_BUFFERED, FILE_SPECIAL_ACCESS)
@@ -194,6 +194,17 @@ type read(uint64_t src, int len)
 	type ret = {};
 	readmem(src, (uint64_t)&ret, len);
 	return ret;
+}
+
+std::string readStr(uint64_t src, int len)
+{
+	std::string result;
+	char ret = { 0 };
+	for (int i = 0; i < len; i++) {
+		readmem(src + i, (uint64_t)&ret, sizeof(char));
+		result += ret;
+	}
+	return result;
 }
 
 template <typename type>

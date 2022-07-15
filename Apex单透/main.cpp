@@ -1,7 +1,11 @@
-﻿#include "function.h"
+﻿#include "Tools/verify.h"
+#include "function.h"
 #include "Driver/MemOperations.h"
 #include <direct.h>
-#include "QR_Verify.hpp"
+#include <string>
+#include <stringapiset.h>
+#include <codecvt>
+//#include "QR_Verify.hpp"
 
 bool active = true, debug = false;
 bool k_f5 = 0;
@@ -11,7 +15,43 @@ bool k_f7 = 0;
 bool player_glow = true;
 bool show_shield = true;
 
-bool item_glow = false;
+bool show_watcher = true;
+
+
+std::wstring UTF8ToWide(const std::string& source)
+{
+	std::wstring_convert<std::codecvt_utf8<wchar_t>> conv;
+	return conv.from_bytes(source);
+}
+
+std::string WideToAscii(std::wstring _strSrc)
+{
+	int ansiiLen = WideCharToMultiByte(CP_ACP, 0, _strSrc.c_str(), -1, nullptr, 0, nullptr, nullptr);
+	char* pAssii = (char*)malloc(sizeof(char) * ansiiLen);
+	WideCharToMultiByte(CP_ACP, 0, _strSrc.c_str(), -1, pAssii, ansiiLen, nullptr, nullptr);
+	std::string ret_str = pAssii;
+	free(pAssii);
+	return ret_str;
+}
+
+std::string UTF8ToAscii(std::string _strSrc)
+{
+	return WideToAscii(UTF8ToWide(_strSrc));
+}
+
+char* Utf8ToGb2312(const char* p)                                               //unicode转国标
+{
+	DWORD dwNum = MultiByteToWideChar(CP_UTF8, 0, p, -1, NULL, 0);
+	char* psText;                                                         //存储文件名
+	wchar_t* pwText = (wchar_t*)malloc(dwNum * sizeof(wchar_t));
+	dwNum = MultiByteToWideChar(CP_UTF8, 0, p, -1, pwText, dwNum);
+	dwNum = WideCharToMultiByte(CP_ACP, 0, pwText, -1, NULL, 0, NULL, NULL);
+	psText = (char*)malloc(dwNum * sizeof(char));
+	dwNum = WideCharToMultiByte(CP_ACP, 0, pwText, -1, psText, dwNum, NULL, NULL);
+	free(pwText);
+	return psText;
+}
+
 
 bool IsKeyDown(int vk)
 {
@@ -20,10 +60,10 @@ bool IsKeyDown(int vk)
 void HotKey() {
 	while (1) {
 
-		if (IsKeyDown(VK_F4))
+		/*if (IsKeyDown(VK_F4))
 		{
 			active = false;
-		}
+		}*/
 
 		if (IsKeyDown(VK_F5) && k_f5 == 0)//F5 敌人发光
 		{
@@ -32,7 +72,7 @@ void HotKey() {
 		}
 		else if (!IsKeyDown(VK_F5) && k_f5 == 1)
 		{
-			k_f6 = 0;
+			k_f5 = 0;
 		}
 		
 		if (IsKeyDown(VK_F6) && k_f6 == 0)//F6 显示护甲
@@ -45,11 +85,11 @@ void HotKey() {
 			k_f6 = 0;
 		}
 
-		/*
-		if (IsKeyDown(VK_F7) && k_f7 == 0)//F7 物品发光
+		
+		if (IsKeyDown(VK_F7) && k_f7 == 0)//F7 观众列表
 		{
 			k_f7 = 1;
-			item_glow = !item_glow;
+			show_watcher = !show_watcher;
 		}
 		else if (!IsKeyDown(VK_F7) && k_f7 == 1)
 		{
@@ -58,17 +98,30 @@ void HotKey() {
 
 	}
 }
+float GetYaw(DWORD_PTR Entity) {
+	float yaw = 0;
+	yaw = read<float>(Entity + OFFSET_yYaw);
+
+	if (yaw < 0)
+		yaw += 360;
+	yaw += 90;
+	if (yaw > 360)
+		yaw -= 360;
+
+	return yaw;
+}
 
 void GameCache()
 {
 	while (true)
 	{
-		Offset::localEntity = read<DWORD_PTR>(dwProcess_Base + Offset::LocalPlayer);
+		Offset::localEntity = read<DWORD_PTR>(dwProcess_Base + OFFSET_LOCAL_ENT);
 
-		std::vector<DWORD_PTR> playerTmpList = {};
 		std::vector<player> TmpPlayerList = {};
+		std::vector<watcher> TmpWatcherList = {};
 		player tmpPlayer;
-		
+		watcher tmpWatcher;
+		int localPlayerTeamID = read<int>(Offset::localEntity + OFFSET_TEAM);
 		for (int i = 0,j = 0; i < 64; i++)
 		{
 			//DWORD_PTR Entity = read<DWORD_PTR>(dwProcess_Base + Offset::cl_entitylist + (i * 0x20));
@@ -83,9 +136,35 @@ void GameCache()
 				//判断是否不是本地玩家
 				if (Offset::localEntity != Entity)
 				{
-					int localPlayerTeamID = read<int>(Offset::localEntity + Offset::m_iTeamNum);
-					int playerTeamID = read<int>(Entity + Offset::m_iTeamNum);
+					int playerTeamID = read<int>(Entity + OFFSET_TEAM);
 					int shield_type = read<int>(Entity + OFFSET_SHIELD_TYPE);
+					GetName(dwProcess_Base, Entity, tmpPlayer.name);
+
+					int dead = read<int>(Entity + OFFSET_LIFESTATE);//dead == 1，player is dead
+					if (dead == 1) {
+						/*float angle = read<float>(Entity + OFFSET_yYaw);
+						float local_angle = read<float>(Offset::localEntity + OFFSET_yYaw);
+
+						float yaw = -angle; // yaw is inverted
+						if (yaw < 0)
+							yaw += 360; yaw += 90; // yaw is off by 90
+						if (yaw > 360)
+							yaw -= 360;
+						//local
+						float local_yaw = -local_angle; // yaw is inverted
+						if (local_yaw < 0)
+							local_yaw += 360; local_yaw += 90; // yaw is off by 90
+						if (local_yaw > 360)
+							local_yaw -= 360;
+						*/
+						float yaw = GetYaw(Entity);
+						float local_yaw = GetYaw(Offset::localEntity);
+
+						if (yaw == local_yaw) {
+							strcpy(tmpWatcher.name, tmpPlayer.name);
+							TmpWatcherList.push_back(tmpWatcher);
+						}
+					}
 
 					//判断是否是敌人
 					//if (playerTeamID != localPlayerTeamID)
@@ -100,7 +179,6 @@ void GameCache()
 						tmpPlayer.shield_type = shield_type;
 						tmpPlayer.teamid = playerTeamID;
 
-						playerTmpList.push_back(Entity);
 						TmpPlayerList.push_back(tmpPlayer);
 						
 						//}
@@ -108,11 +186,11 @@ void GameCache()
 				}
 			}
 		}
-		Offset::playerList = playerTmpList;
+		watcherList = TmpWatcherList;
 		Offset::players = TmpPlayerList;
-		Offset::localTeamID = read<int>(Offset::localEntity + Offset::m_iTeamNum);
-		playerTmpList.clear();
+		Offset::localTeamID = localPlayerTeamID;
 		TmpPlayerList.clear();
+		TmpWatcherList.clear();
 
 		Sleep(200);
 	}
@@ -144,6 +222,22 @@ void IsDebug(std::string path) {
 
 }
 
+void WathcerFunction() {
+	while (true)
+	{
+		auto tmpWathcerList = watcherList;
+		std::string str = "当前您的观众数:"+std::to_string(tmpWathcerList.size());
+
+		printf("%s\n", str.c_str());
+		printf("-----------------------------------------------\n");
+		for (int i = 0; i < tmpWathcerList.size(); i++) {
+			printf("%s\n", Utf8ToGb2312(tmpWathcerList[i].name));//获取到的名字是u8编码的，需要转换为命令行可以显示的编码格式，中文系统默认为936（简体中文）
+		}
+		std::this_thread::sleep_for(std::chrono::milliseconds(200));
+		system("cls");
+	}
+}
+
 int main(int argCount, char** argVector)
 {
 	bool QR = false;
@@ -155,20 +249,37 @@ int main(int argCount, char** argVector)
 		QR = true;
 	}
 	else {
-		printf("请使用QQ扫码\n");
-		int QR_Back = QR_Verify(Path);
-		if (QR_Back != 0)
+		int Verify_return = verify(Path);
+		if (Verify_return != 1)
+		{
+			QR = false;
+			return 1;
+		}
+		else if (Verify_return == 1)
+			QR = true;
+		//int QR_Back = QR_Verify(Path);
+		/*if (QR_Back != 0)
 		{
 			QR = false;
 			return 1;
 		}
 		else if (QR_Back == 0)
 			QR = true;
+		/**/
 	}
 
 	if (QR)
 	{
 		//SetConsoleTitleA(Util::RandomString(16).c_str());
+		if (int returnvalue = Init()) //driver handle and process Ids
+		{
+			if (returnvalue == DRIVER_NOT_LOADED)
+				std::cout << "Driver not loaded\n";
+			if (returnvalue == PROCESS_NOT_FOUND)
+				std::cout << "Process not found\n";
+			system("pause");
+			return 0;
+		}
 		srand(time(NULL));
 		std::string filePath = argVector[0];
 		Util::RenameFile(filePath);
@@ -184,15 +295,6 @@ int main(int argCount, char** argVector)
 			Sleep(1000);
 
 
-		if (int returnvalue = Init()) //driver handle and process Ids
-		{
-			if (returnvalue == DRIVER_NOT_LOADED)
-				std::cout << "Driver not loaded\n";
-			if (returnvalue == PROCESS_NOT_FOUND)
-				std::cout << "Process not found\n";
-			system("pause");
-			return 0;
-		}
 		//获取基模块地址
 		while (dwProcess_Base == 0)
 		{
@@ -202,13 +304,15 @@ int main(int argCount, char** argVector)
 		//system("pause");
 		system(E("CLS"));
 		printf((" [+] Contact newton_miku\n [+]啊，哈哈哈哈\n [+]寄汤来喽 \n"));
-		printf(" 进程名称: %s \n 进程ID: %d \n 基地址: %llx\n", dwProcessName, dwProcessId, dwProcess_Base);
-
+		printf(" 进程名称: %s \n 进程ID: %d \n 基地址: 0x%llx\n", dwProcessName, dwProcessId, dwProcess_Base);
 		CreateThread(nullptr, NULL, reinterpret_cast<LPTHREAD_START_ROUTINE>(HotKey), nullptr, NULL, nullptr);
 		CreateThread(nullptr, NULL, reinterpret_cast<LPTHREAD_START_ROUTINE>(GameCache), nullptr, NULL, nullptr);
 		CreateThread(nullptr, NULL, reinterpret_cast<LPTHREAD_START_ROUTINE>(PlayerGlowFunc), nullptr, NULL, nullptr);
-		ShowWindow(GetConsoleWindow(), SW_HIDE);
-		MessageBox(NULL, ("  程序已加载完毕\n[F4]退出程序\n[F5]开关敌人发光\n[F6]开关护甲颜色发光\n"), "仅供内部使用", MB_OK);
+		CreateThread(nullptr, NULL, reinterpret_cast<LPTHREAD_START_ROUTINE>(WathcerFunction), nullptr, NULL, nullptr);
+		//system("chcp 65001");
+		system(E("CLS"));
+		//ShowWindow(GetConsoleWindow(), SW_HIDE);
+		MessageBox(NULL, ("  程序已加载完毕\n[F4]退出程序\n[F5]开关敌人发光\n[F6]开关护甲颜色发光\n[F7]显示观众列表"), "仅供内部使用", MB_OK);
 		/*bool WindowFocus = false;
 		while (WindowFocus == false)
 		{
@@ -250,15 +354,22 @@ int main(int argCount, char** argVector)
 				ScreenBottom = TempRect.bottom;
 			}
 		}/**/
-		while (hwnd && active)
+		while (hwnd && !GetAsyncKeyState(VK_F4))
 		{
+			if (show_watcher) {
+				ShowWindow(GetConsoleWindow(), SW_SHOW);
+			}
+			else
+			{
+				ShowWindow(GetConsoleWindow(), SW_HIDE);
+			}
 			hwnd = FindWindowA(NULL, ("Apex Legends"));
 			if (!hwnd)
 			{
 				exit(0);
 				return 0;
 			}
-			std::this_thread::sleep_for(std::chrono::seconds(30));
+			std::this_thread::sleep_for(std::chrono::milliseconds(800));
 		}
 		exit(0);
 		return 0;

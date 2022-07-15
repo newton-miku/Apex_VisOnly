@@ -7,6 +7,9 @@
     <Filter Include="Header Files">
       <UniqueIdentifier>{2a6199d3-3bfe-47ef-a0e6-4df477210026}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Tools">
+      <UniqueIdentifier>{1358a767-94da-4b49-ae3e-ee6dd34b2070}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -25,12 +28,17 @@
       <Filter>Driver</Filter>
     </ClInclude>
     <ClInclude Include="resource.h" />
-    <ClInclude Include="QR_Verify.hpp" />
     <ClInclude Include="glow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="offset.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Tools\verify.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="Tools\QR_Verify.hpp">
+      <Filter>Tools</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
