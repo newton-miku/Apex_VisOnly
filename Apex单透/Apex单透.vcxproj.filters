@@ -48,4 +48,9 @@
     <Image Include="D:\Apex hack\ICO\r5apex.ico" />
     <Image Include="..\..\..\ICO\apexH.ico" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Tools\QR.py">
+      <Filter>Tools</Filter>
+    </None>
+  </ItemGroup>
 </Project>

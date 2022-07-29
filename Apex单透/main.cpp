@@ -100,7 +100,7 @@ void HotKey() {
 }
 float GetYaw(DWORD_PTR Entity) {
 	float yaw = 0;
-	yaw = read<float>(Entity + OFFSET_yYaw);
+	yaw = read<float>(Entity + OFFSET_YAW);
 
 	if (yaw < 0)
 		yaw += 360;
@@ -192,7 +192,7 @@ void GameCache()
 		TmpPlayerList.clear();
 		TmpWatcherList.clear();
 
-		Sleep(200);
+		//std::this_thread::sleep_for(std::chrono::milliseconds(200));
 	}
 }
 
@@ -306,8 +306,12 @@ int main(int argCount, char** argVector)
 		printf((" [+] Contact newton_miku\n [+]啊，哈哈哈哈\n [+]寄汤来喽 \n"));
 		printf(" 进程名称: %s \n 进程ID: %d \n 基地址: 0x%llx\n", dwProcessName, dwProcessId, dwProcess_Base);
 		CreateThread(nullptr, NULL, reinterpret_cast<LPTHREAD_START_ROUTINE>(HotKey), nullptr, NULL, nullptr);
-		CreateThread(nullptr, NULL, reinterpret_cast<LPTHREAD_START_ROUTINE>(GameCache), nullptr, NULL, nullptr);
-		CreateThread(nullptr, NULL, reinterpret_cast<LPTHREAD_START_ROUTINE>(PlayerGlowFunc), nullptr, NULL, nullptr);
+		//CreateThread(nullptr, NULL, reinterpret_cast<LPTHREAD_START_ROUTINE>(GameCache), nullptr, NULL, nullptr);
+		std::thread gamecache_th(GameCache);
+		gamecache_th.detach();
+		std::thread glow_th(PlayerGlowFunc);
+		glow_th.detach();
+		//CreateThread(nullptr, NULL, reinterpret_cast<LPTHREAD_START_ROUTINE>(PlayerGlowFunc), nullptr, NULL, nullptr);
 		CreateThread(nullptr, NULL, reinterpret_cast<LPTHREAD_START_ROUTINE>(WathcerFunction), nullptr, NULL, nullptr);
 		//system("chcp 65001");
 		system(E("CLS"));
@@ -369,7 +373,7 @@ int main(int argCount, char** argVector)
 				exit(0);
 				return 0;
 			}
-			std::this_thread::sleep_for(std::chrono::milliseconds(800));
+			std::this_thread::sleep_for(std::chrono::milliseconds(300));
 		}
 		exit(0);
 		return 0;

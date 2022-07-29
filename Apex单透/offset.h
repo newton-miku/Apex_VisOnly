@@ -2,20 +2,20 @@
 #include<vector>
 //UPDATED 15/07/2022 (DD/MM/YYYY)
 
-#define OFFSET_KEY_JUMP				0x07546398						//in_jump
-#define OFFSET_KEY_DUCK				0x0ba314f8						//in_duck
+#define OFFSET_KEY_JUMP				0x07546310						//in_jump
+#define OFFSET_KEY_DUCK				0x0ba31488						//in_duck
 
 #define OFFSET_ENTITYLIST 			0x1a203b8						//cl_entitylist
-#define OFFSET_LOCAL_ENT 			0x1dd15e8						//local_player
+#define OFFSET_LOCAL_ENT 			0x1dd15e8						//LocalPlayer local_player
 #define OFFSET_ORIGIN				0x014c							//BaseEntity!m_vecAbsOrigin
 #define OFFSET_BONES				0x0f38							//m_bConstrainBetweenEndpoints //勿动，不会变化
-#define OFFSET_NAME_LIST			0xba30ab0						//NameList
+#define OFFSET_NAME_LIST			0xba30a40						//NameList
 #define OFFSET_NAME					0x0589							//m_iName
 #define OFFSET_SIG_NAME				0x0580							//m_iSignifierName //Useless
 #define OFFSET_GAMEMODE				0x01e09190+0x58					//mp_gamemode + 0x58
 
-#define OFFSET_MATRIX				0x11a210						//view_matrix ViewMatrix
-#define OFFSET_RENDER				0x7546250						//view_render ViewRender
+#define OFFSET_MATRIX				0x11a210						//ViewMatrix view_matrix
+#define OFFSET_RENDER				0x75461d0						//ViewRender view_render
 #define OFFSET_RadarVIEWANGLES		0x1f4c							//CPlayer!camera_angles
 #define OFFSET_HEALTH				0x0438							//CPlayer->m_iHealth
 #define OFFSET_SHIELD				0x0170							//CBaseEntity->m_shieldHealth
@@ -25,7 +25,6 @@
 
 #define OFFSET_OBSERVER_MODE		0x34bc							//m_iObserverMode Type-int 0-not 1/5-watching 3-choosing player
 #define OFFSET_OBSERVER_TARGET		0x34c8							//m_hObserverTarget Type-int //no more networked
-#define OFFSET_yYaw					0x2a90+0x8						//m_animAimYaw+0x8 ? 
 #define OFFSET_YAW					0x22a0-0x8						//m_currentFramePlayer.m_ammoPoolCount - 0x8
 
 #define OFFSET_TEAM					0x0448							//m_iTeamNum
@@ -34,8 +33,8 @@
 #define OFFSET_ITEM_ID				0x16a8							//[RecvTable.DT_PropSurvival]-> m_customScriptInt
 
 #define OFFSET_CAMERAPOS			0x1f40							//CPlayer!camera_origin
-#define OFFSET_THIRDPERSON1         0x01db34d0 + 0x6c				//thirdperson_mayamode + 0x6c//0-视角跟随人物视角 !0-人物随意转动视角，镜头视角不转动
-#define OFFSET_THIRDPERSON	        0x01a02db0 + 0x6c				//thirdperson_override + 0x6c
+#define OFFSET_THIRDPERSON1         0x01db54d0 + 0x6c				//thirdperson_mayamode + 0x6c//0-视角跟随人物视角 !0-人物随意转动视角，镜头视角不转动
+#define OFFSET_THIRDPERSON	        0x01a04db0 + 0x6c				//thirdperson_override + 0x6c
 #define OFFSET_THIRDPERSONCAM	    0x36a8							//m_thirdPersonShoulderView //1开启，0关闭
 
 #define OFFSET_VIEWANGLES			0x2594 - 0x14					//m_ammoPoolCapacity - 0x14
@@ -47,7 +46,7 @@
 #define OFFSET_AMMO_IN_CLIP			0x16a4							//CWeaponX!m_ammoInClip		Type-int
 #define OFFSET_IN_RELOADING         0x16e6							//CWeaponX!m_bInReload		Type-bool
 
-#define OFFSET_TIMESCALE			0x013fa370						//host_timescale
+#define OFFSET_TIMESCALE			0x013fc370						//host_timescale
 
 #define GLOW_DISTANCE				0x0380+0x34						//m_highlightServerFadeEndTimes + 52(0x34)
 #define GLOW_TYPE					0x02c0							//m_highlightFunctionBits

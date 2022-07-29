@@ -1,0 +1,1 @@
+pyinstaller -F QR.py -i "D:\Apex hack\ICO\QQ.ico"

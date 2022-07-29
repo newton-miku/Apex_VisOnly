@@ -160,7 +160,7 @@ void PlayerGlowFunc()
 			/*if (!Offset::localEntity) continue;
 				auto playerList_Copy = Offset::playerList;
 			/**/
-			std::string gamemode = GetGamemode(oBaseAddress);
+			//std::string gamemode = GetGamemode(oBaseAddress);
 			if (!Offset::localEntity) continue;
 			std::vector<player> playerList_Copy = Offset::players;
 			uintptr_t locPlayer = read<uintptr_t>(oBaseAddress + OFFSET_LOCAL_ENT);
@@ -188,16 +188,15 @@ void PlayerGlowFunc()
 				//Get shield type
 				int shield_type = read<int>(Entity + OFFSET_SHIELD_TYPE);
 				int shield_health = read<int>(Entity + OFFSET_SHIELD);
-				//int shield_type = playerList_Copy[i].shield_type;
 
 
 				// Is it an enemy
-				if (strcmp(gamemode.c_str(), E("control"))) {
+				/*if (strcmp(gamemode.c_str(), E("control"))) {
 					if (playerTeamID % 2) playerTeamID = 2;
 					else playerTeamID = 1;
 					if (entTeamID % 2) entTeamID = 2;
 					else entTeamID = 1;
-				}
+				}*/
 				if (entTeamID != playerTeamID)
 				{
 
@@ -226,28 +225,6 @@ void PlayerGlowFunc()
 							//unvisible enemie color
 							if (entKnockedState == 0)
 							{
-								/*if (show_shield) {
-									switch (shield_type)
-									{
-									case 0:
-										color = WHITE; break;
-									case 1:
-										color = WHITE; break;
-									case 2:
-										color = BLUE;  break;
-									case 3:
-										color = PURPLE; break;
-									case 4:
-										color = GOLD; break;
-									case 5:
-										color = RED; break;
-									default:
-										color = WHITE;break;
-									}
-								}else
-								{
-									color = playerglow3;
-								}/**/
 								Set_Color(shield_type, shield_health, color);
 								player_glow_f(Entity, color);
 							}
@@ -264,7 +241,6 @@ void PlayerGlowFunc()
 				else {
 					teammate_glow_f(playerEntity);
 				}
-				//printf("0x%p\n", playerEntity);
 			}
 
 			playerList_Copy.clear();

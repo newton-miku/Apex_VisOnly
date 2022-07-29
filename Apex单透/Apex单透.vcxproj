@@ -175,6 +175,9 @@
     <Image Include="..\..\..\ICO\apexH.ico" />
     <Image Include="D:\Apex hack\ICO\r5apex.ico" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Tools\QR.py" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
