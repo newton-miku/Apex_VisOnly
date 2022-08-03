@@ -5,7 +5,8 @@
 #include <string>
 #include <stringapiset.h>
 #include <codecvt>
-//#include "QR_Verify.hpp"
+#include "Tools/version.hpp"
+#include "Tools/curl.hpp"
 
 bool active = true, debug = false;
 bool k_f5 = 0;
@@ -207,12 +208,6 @@ void IsDebug(std::string path) {
 	FILE* debugFile;
 	path += "\\debug.txt";
 	std::string Cdebug = "C:\\debug.txt";
-	/*if (NULL == (debugFile = fopen(path.c_str(), "r")))
-		return;
-	else {
-		fclose(debugFile);
-		debug = true;
-	}*/
 	if (NULL == (debugFile = fopen(Cdebug.c_str(), "r")))
 		return;
 	else {
@@ -241,31 +236,45 @@ void WathcerFunction() {
 int main(int argCount, char** argVector)
 {
 	bool QR = false;
+	string latestVer,thisVer;
+	thisVer = get_thisVersion();
+	cout << "当前版本：" << thisVer << endl;
 	std::string Path = current_working_directory();
-
 	IsDebug(Path);
 	if (debug)
 	{
 		QR = true;
 	}
 	else {
-		int Verify_return = verify(Path);
-		if (Verify_return != 1)
-		{
+		latestVer = get_latestVersion();
+		//在这里写获取最新版本 http://ddxnb.tk:8000/?s=App.Version.now
+		if (strcmp(thisVer.c_str(), latestVer.c_str()) != 0) {
+			system("cls");
+			cout << "当前版本：" << thisVer << endl<<"最新版本："<<latestVer<<endl;
+			cout << "请升级最新版本" << endl;
 			QR = false;
 			return 1;
 		}
-		else if (Verify_return == 1)
-			QR = true;
-		//int QR_Back = QR_Verify(Path);
-		/*if (QR_Back != 0)
-		{
-			QR = false;
-			return 1;
+		else {
+			//以下为验证程序
+			int Verify_return = verify(Path);
+			if (Verify_return != 1)
+			{
+				QR = false;
+				return 1;
+			}
+			else if (Verify_return == 1)
+				QR = true;
+			//int QR_Back = QR_Verify(Path);
+			/*if (QR_Back != 0)
+			{
+				QR = false;
+				return 1;
+			}
+			else if (QR_Back == 0)
+				QR = true;
+			/**/
 		}
-		else if (QR_Back == 0)
-			QR = true;
-		/**/
 	}
 
 	if (QR)

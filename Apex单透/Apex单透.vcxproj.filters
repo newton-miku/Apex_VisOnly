@@ -40,6 +40,12 @@
     <ClInclude Include="Tools\QR_Verify.hpp">
       <Filter>Tools</Filter>
     </ClInclude>
+    <ClInclude Include="Tools\version.hpp">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="Tools\curl.hpp">
+      <Filter>Tools</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Apex单透.rc" />
