@@ -13,6 +13,14 @@ std::string getResponseStr;
 long httpcode;//网页状态码
 FILE* fp;//QR文件指针
 
+#define VER_GET_ERR		1
+#define VER_GET_OK		0
+
+typedef struct version {
+	int get;
+	string ver;
+};
+
 //get请求和post请求数据响应函数
 size_t req_reply(void* ptr, size_t size, size_t nmemb, void* stream)
 {
@@ -51,14 +59,17 @@ CURLcode curl_get_req(const std::string& url, std::string& response, int type)
 		curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
 
 		//获取网页请求状态码
-		curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &httpcode);
 
 		//允许几次重定向
 		curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 0);
 
 		//设置ssl验证
-		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, true);
+		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, false);
 		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, true);
+
+		//curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, true);
+			//这里的pem文件是http://curl.haxx.se/ca/cacert.pem
+		//curl_easy_setopt(curl, CURLOPT_CAINFO, "./cacert.pem");
 
 		//CURLOPT_VERBOSE的值为1时，会显示详细的调试信息
 		curl_easy_setopt(curl, CURLOPT_VERBOSE, 0);
@@ -84,9 +95,12 @@ CURLcode curl_get_req(const std::string& url, std::string& response, int type)
 
 		// 开启请求  
 		res = curl_easy_perform(curl);
+		curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &httpcode);
+		cout << "httpcode:" << httpcode << endl;
 	}
 	// 释放curl 
 	curl_easy_cleanup(curl);
+	cout << res << endl;
 	return res;
 }
 string set_version(string getResponseStr,int source) {
@@ -107,28 +121,33 @@ string set_version(string getResponseStr,int source) {
 			else return ("0.0.0.0");
 	}
 }
-string get_latestVersion() {
+version get_latestVersion() {
 	int source = 0;
 	string url = "http://ddxnb.tk:8000/?s=App.Version.now";
 	string url1 = "https://www.ddxnb.tk/version.php?type=product";
-	string getResponseStr,ver;
+	string getResponseStr,verStr;
+	version ver;
 	auto res = curl_get_req(url, getResponseStr, GET_JSON);
 	if ( res == CURLE_OK) {
 		if (httpcode != 200) {
 			source = 1;
-			url = "http://www.ddxnb.tk/version.php?type=product";
-			curl_get_req(url, getResponseStr, GET_JSON);
 		}
 	}
-	else
+	else {
+		source = 1;
+	}
+	if (source == 1)
 	{
 		source = 1;
 		res = curl_get_req(url1, getResponseStr, GET_JSON);
 		if (res != CURLE_OK) {
-			printf("服务器版本验证出错，请联系管理员\n");
-			return ("1.1.1.1");
+			ver.get = VER_GET_ERR;
+			ver.ver = "1.1.1.1";
+			return ver;
 		}
 	}
-	ver = set_version(getResponseStr,source);
+	verStr = set_version(getResponseStr,source);
+	ver.get = VER_GET_OK;
+	ver.ver = verStr;
 	return ver;
 }

@@ -236,6 +236,7 @@ void WathcerFunction() {
 int main(int argCount, char** argVector)
 {
 	bool QR = false;
+	version ver;
 	string latestVer,thisVer;
 	thisVer = get_thisVersion();
 	cout << "当前版本：" << thisVer << endl;
@@ -246,13 +247,24 @@ int main(int argCount, char** argVector)
 		QR = true;
 	}
 	else {
-		latestVer = get_latestVersion();
+		ver = get_latestVersion();
 		//在这里写获取最新版本 http://ddxnb.tk:8000/?s=App.Version.now
 		//或者使用 https://www.ddxnb.tk/version.php?type=product
+		
+		//这里是检查最新版本
+		if (ver.get == VER_GET_ERR) {
+			cout<<"服务器版本验证出错，请联系管理员\n"<<endl;
+			getchar();
+			return 1;
+		}
+		else if (ver.get == VER_GET_OK) {
+			latestVer = ver.ver;
+		}
 		if (strcmp(thisVer.c_str(), latestVer.c_str()) != 0) {
-			system("cls");
+			//system("cls");
 			cout << "当前版本：" << thisVer << endl<<"最新版本："<<latestVer<<endl;
 			cout << "请升级最新版本" << endl;
+			getchar();
 			QR = false;
 			return 1;
 		}
