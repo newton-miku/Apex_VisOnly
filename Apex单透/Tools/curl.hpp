@@ -57,8 +57,8 @@ CURLcode curl_get_req(const std::string& url, std::string& response, int type)
 		curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 0);
 
 		//设置ssl验证
-		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, false);
-		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, false);
+		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, true);
+		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, true);
 
 		//CURLOPT_VERBOSE的值为1时，会显示详细的调试信息
 		curl_easy_setopt(curl, CURLOPT_VERBOSE, 0);
@@ -110,6 +110,7 @@ string set_version(string getResponseStr,int source) {
 string get_latestVersion() {
 	int source = 0;
 	string url = "http://ddxnb.tk:8000/?s=App.Version.now";
+	string url1 = "https://www.ddxnb.tk/version.php?type=product";
 	string getResponseStr,ver;
 	auto res = curl_get_req(url, getResponseStr, GET_JSON);
 	if ( res == CURLE_OK) {
@@ -122,7 +123,6 @@ string get_latestVersion() {
 	else
 	{
 		source = 1;
-		string url1 = "http://www.ddxnb.tk/version.php?type=product";
 		res = curl_get_req(url1, getResponseStr, GET_JSON);
 		if (res != CURLE_OK) {
 			printf("服务器版本验证出错，请联系管理员\n");
