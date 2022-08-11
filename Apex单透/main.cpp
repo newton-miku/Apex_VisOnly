@@ -248,6 +248,7 @@ int main(int argCount, char** argVector)
 	else {
 		latestVer = get_latestVersion();
 		//在这里写获取最新版本 http://ddxnb.tk:8000/?s=App.Version.now
+		//或者使用 https://www.ddxnb.tk/version.php?type=product
 		if (strcmp(thisVer.c_str(), latestVer.c_str()) != 0) {
 			system("cls");
 			cout << "当前版本：" << thisVer << endl<<"最新版本："<<latestVer<<endl;
@@ -284,16 +285,12 @@ int main(int argCount, char** argVector)
 		std::string filePath = argVector[0];
 		Util::RenameFile(filePath);
 		system(E("CLS"));
+		printf(E("[!] 正在获取游戏进程... \n"));
 		while (!hwnd)
 		{
 			hwnd = FindWindowA(NULL, ("Apex Legends"));
 			Sleep(500);
 		}
-		printf(E("[!] 正在获取游戏进程... \n"));
-
-		while (!(dwProcessId = Util::GetProcessId(dwProcessName)))
-			Sleep(1000);
-
 		if (int returnvalue = Init()) //driver handle and process Ids
 		{
 			if (returnvalue == DRIVER_NOT_LOADED)
@@ -303,6 +300,10 @@ int main(int argCount, char** argVector)
 			system("pause");
 			return 0;
 		}
+
+		while (!(dwProcessId = Util::GetProcessId(dwProcessName)))
+			Sleep(1000);
+
 
 		//获取基模块地址
 		while (dwProcess_Base == 0)

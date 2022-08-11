@@ -3,7 +3,6 @@
 #include <string>
 #include <direct.h>
 #include <iostream>
-#include <iostream>
 
 #pragma comment(lib, "version.lib")
 

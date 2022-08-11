@@ -155,7 +155,6 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="aimbot.h" />
     <ClInclude Include="config.h" />
     <ClInclude Include="Driver\MemOperations.h" />
     <ClInclude Include="Driver\utils.h" />

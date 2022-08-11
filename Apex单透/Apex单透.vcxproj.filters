@@ -20,7 +20,6 @@
     <ClInclude Include="vector.h" />
     <ClInclude Include="xor.h" />
     <ClInclude Include="util.h" />
-    <ClInclude Include="aimbot.h" />
     <ClInclude Include="Driver\MemOperations.h">
       <Filter>Driver</Filter>
     </ClInclude>

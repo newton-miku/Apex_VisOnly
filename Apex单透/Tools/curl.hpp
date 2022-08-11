@@ -57,8 +57,8 @@ CURLcode curl_get_req(const std::string& url, std::string& response, int type)
 		curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 0);
 
 		//设置ssl验证
-		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, true);
-		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, true);
+		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, false);
+		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, false);
 
 		//CURLOPT_VERBOSE的值为1时，会显示详细的调试信息
 		curl_easy_setopt(curl, CURLOPT_VERBOSE, 0);
@@ -89,28 +89,46 @@ CURLcode curl_get_req(const std::string& url, std::string& response, int type)
 	curl_easy_cleanup(curl);
 	return res;
 }
-string set_version(string getResponseStr) {
+string set_version(string getResponseStr,int source) {
 	Json::Reader reader;
 	Json::Value value;
 	string out;
 	if (reader.parse(getResponseStr, value))
 	{
-		out = value["ret"].asString();
-		if (strcmp(out.c_str(), "200") == 0) {
-			const Json::Value arrayObj = value["data"];
-			for (unsigned int i = 0; i < arrayObj.size(); i++)
-			{
-				out = arrayObj["version"].asString();
+			out = value["ret"].asString();
+			if (strcmp(out.c_str(), "200") == 0) {
+				const Json::Value arrayObj = value["data"];
+				for (unsigned int i = 0; i < arrayObj.size(); i++)
+				{
+					out = arrayObj["version"].asString();
+				}
+				return out;
 			}
-			return out;
-		}
-		else return ("0.0.0.0");
+			else return ("0.0.0.0");
 	}
 }
 string get_latestVersion() {
+	int source = 0;
 	string url = "http://ddxnb.tk:8000/?s=App.Version.now";
 	string getResponseStr,ver;
-	curl_get_req(url, getResponseStr, GET_JSON);
-	ver = set_version(getResponseStr);
+	auto res = curl_get_req(url, getResponseStr, GET_JSON);
+	if ( res == CURLE_OK) {
+		if (httpcode != 200) {
+			source = 1;
+			url = "http://www.ddxnb.tk/version.php?type=product";
+			curl_get_req(url, getResponseStr, GET_JSON);
+		}
+	}
+	else
+	{
+		source = 1;
+		string url1 = "http://www.ddxnb.tk/version.php?type=product";
+		res = curl_get_req(url1, getResponseStr, GET_JSON);
+		if (res != CURLE_OK) {
+			printf("服务器版本验证出错，请联系管理员\n");
+			return ("1.1.1.1");
+		}
+	}
+	ver = set_version(getResponseStr,source);
 	return ver;
 }
