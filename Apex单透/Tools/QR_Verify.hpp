@@ -21,8 +21,9 @@ int QR_Verify(std::string Path) {
     ZeroMemory(&pi, sizeof(pi));
     ZeroMemory(&si, sizeof(si));
     si.cb = sizeof(STARTUPINFOA);
-    Path += file;
-    BOOL working = ::CreateProcess(Path.c_str(), NULL, NULL, NULL, FALSE, NORMAL_PRIORITY_CLASS, NULL, NULL, &si, &pi);
+    //Path += file;
+    string filePath = file;
+    BOOL working = ::CreateProcess(filePath.c_str(), NULL, NULL, NULL, FALSE, NORMAL_PRIORITY_CLASS, NULL, NULL, &si, &pi);
 
     if (working == 0)
     {
@@ -36,7 +37,7 @@ int QR_Verify(std::string Path) {
 
     unsigned long Result;
     GetExitCodeProcess(pi.hProcess, &Result);
-    std::string pic_name = "C:\\QR.png";
+    std::string pic_name = "QR.png";
     remove(pic_name.c_str());
     remove(file.c_str());
     Sleep(300);
