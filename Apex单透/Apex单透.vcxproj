@@ -163,6 +163,7 @@
     <ClInclude Include="offset.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Tools\curl.hpp" />
+    <ClInclude Include="Tools\QR_data.h" />
     <ClInclude Include="Tools\QR_Verify.hpp" />
     <ClInclude Include="Tools\verify.h" />
     <ClInclude Include="Tools\version.hpp" />

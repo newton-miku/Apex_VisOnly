@@ -29,12 +29,12 @@ void player_glow_f(DWORD64 Entity, float* color)
 {
 	if (player_glow) {
 		write<int>(Entity + OFFSET_GLOW_ENABLE, 1); // glow enable: 1 = enabled, 2 = disabled
-		write<int>(Entity + OFFSET_GLOW_THROUGH_WALLS, 2); // glow through walls: 2 = enabled, 5 = disabled
+		write<int>(Entity + OFFSET_GLOW_THROUGH_WALLS, 1); // glow through walls: 2 = enabled, 5 = disabled
 		write<int>(Entity + OFFSET_GLOW_T1, 16256); 
 		write<int>(Entity + OFFSET_GLOW_T2, 1193322764); 
 
 		write<GlowMode>(Entity + GLOW_TYPE, { 12,12,46,95 }); // glow type: GeneralGlowMode, BorderGlowMode, BorderSize, TransparentLevel;
-		write<float>(Entity + GLOW_DISTANCE, 1200.0f * 3000.0f / 70.0f);//玩家发光距离
+		write<float>(Entity + GLOW_DISTANCE, 1200.0f * METER_TO_FLOAT);//玩家发光距离
 		write<float>(Entity + OFFSET_GLOW_COLOR_R, color[0] * 45); // r color/brightness of enemies
 		write<float>(Entity + OFFSET_GLOW_COLOR_G, color[1] * 45);  // g
 		write<float>(Entity + OFFSET_GLOW_COLOR_B, color[2] * 45); // b
@@ -46,7 +46,7 @@ void player_glow_f(DWORD64 Entity, float* color)
 		write<int>(Entity + OFFSET_GLOW_T2, 0);
 
 		write<GlowMode>(Entity + GLOW_TYPE, { 12,12,46,95 }); // glow type: GeneralGlowMode, BorderGlowMode, BorderSize, TransparentLevel;
-		write<float>(Entity + GLOW_DISTANCE, 1200.0f * 3000.0f / 70.0f);//玩家发光距离
+		write<float>(Entity + GLOW_DISTANCE, 1200.0f * METER_TO_FLOAT);//玩家发光距离
 		write<float>(Entity + OFFSET_GLOW_COLOR_R, 0); // r color/brightness of enemies
 		write<float>(Entity + OFFSET_GLOW_COLOR_G, 0);  // g
 		write<float>(Entity + OFFSET_GLOW_COLOR_B, 0); // b
@@ -57,7 +57,7 @@ void teammate_glow_f(DWORD64 Entity)
 {
 	if (1) {
 		write<int>(Entity + OFFSET_GLOW_ENABLE, 1); // glow enable: 1 = enabled, 2 = disabled
-		write<int>(Entity + OFFSET_GLOW_THROUGH_WALLS, 2); // glow enable: 1 = enabled, 2 = disabled
+		write<int>(Entity + OFFSET_GLOW_THROUGH_WALLS, 1); // glow through walls: 2 = enabled, 5 = disabled
 		write<GlowMode>(Entity + GLOW_TYPE, { (int8_t)128,(int8_t)128,35,95 }); // glow type: GeneralGlowMode, BorderGlowMode, BorderSize, TransparentLevel;
 		write<float>(Entity + OFFSET_GLOW_COLOR_R, 5); // r color/brightness of enemies
 		write<float>(Entity + OFFSET_GLOW_COLOR_G, 5);  // g
@@ -68,12 +68,12 @@ void player_glow_down(DWORD64 Entity, float* color)
 {
 	if (player_glow) {
 		write<int>(Entity + OFFSET_GLOW_ENABLE, 1); // glow enable: 1 = enabled, 2 = disabled
-		write<int>(Entity + OFFSET_GLOW_THROUGH_WALLS, 2); // glow through walls: 2 = enabled, 5 = disabled
+		write<int>(Entity + OFFSET_GLOW_THROUGH_WALLS, 1); // glow through walls: 2 = enabled, 5 = disabled
 		write<int>(Entity + OFFSET_GLOW_T1, 16256);
 		write<int>(Entity + OFFSET_GLOW_T2, 1193322764);
 
 		write<GlowMode>(Entity + GLOW_TYPE, { 117,117,35,95 }); // glow type: GeneralGlowMode, BorderGlowMode, BorderSize, TransparentLevel;
-		write<float>(Entity + GLOW_DISTANCE, 1200.0f * 3000.0f / 70.0f);//玩家发光距离
+		write<float>(Entity + GLOW_DISTANCE, 1200.0f * METER_TO_FLOAT);//玩家发光距离
 		write<float>(Entity + OFFSET_GLOW_COLOR_R, color[0] * 45); // r color/brightness of enemies
 		write<float>(Entity + OFFSET_GLOW_COLOR_G, color[1] * 45);  // g
 		write<float>(Entity + OFFSET_GLOW_COLOR_B, color[2] * 45); // b
@@ -86,7 +86,7 @@ void player_glow_down(DWORD64 Entity, float* color)
 		write<int>(Entity + OFFSET_GLOW_T2, 0);
 
 		write<GlowMode>(Entity + GLOW_TYPE, { 12,12,46,95 }); // glow type: GeneralGlowMode, BorderGlowMode, BorderSize, TransparentLevel;
-		write<float>(Entity + GLOW_DISTANCE, 1200.0f * 3000.0f / 70.0f);//玩家发光距离
+		write<float>(Entity + GLOW_DISTANCE, 1200.0f * METER_TO_FLOAT);//玩家发光距离
 		write<float>(Entity + OFFSET_GLOW_COLOR_R, 0); // r color/brightness of enemies
 		write<float>(Entity + OFFSET_GLOW_COLOR_G, 0);  // g
 		write<float>(Entity + OFFSET_GLOW_COLOR_B, 0); // b

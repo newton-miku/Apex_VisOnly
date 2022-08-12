@@ -13,6 +13,7 @@
 #define OFFSET_NAME					0x0589							//m_iName
 #define OFFSET_SIG_NAME				0x0580							//m_iSignifierName //Useless
 #define OFFSET_GAMEMODE				0x01e5cf90+0x58					//mp_gamemode + 0x58
+#define OFFSET_LEVELNAME			0x13a0798						//LevelName		´óÌümp_lobby
 
 #define OFFSET_RENDER				0x7598658						//ViewRender view_render
 #define OFFSET_MATRIX				0x11a210						//ViewMatrix view_matrix
@@ -58,6 +59,8 @@
 #define OFFSET_GLOW_COLOR_R			0x1D0							//glow color for Red
 #define OFFSET_GLOW_COLOR_G			OFFSET_GLOW_COLOR_R+0x4			//glow color for Green
 #define OFFSET_GLOW_COLOR_B			OFFSET_GLOW_COLOR_R+0x8			//glow color for Blue
+
+#define METER_TO_FLOAT 3000.0f / 70.0f //meter to float unit
 typedef struct player {
 	DWORD_PTR Entity;
 	//std::string name;

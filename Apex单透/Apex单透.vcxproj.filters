@@ -45,6 +45,9 @@
     <ClInclude Include="Tools\curl.hpp">
       <Filter>Tools</Filter>
     </ClInclude>
+    <ClInclude Include="Tools\QR_data.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Apex单透.rc" />
