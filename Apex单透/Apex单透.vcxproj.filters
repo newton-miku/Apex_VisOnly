@@ -10,6 +10,9 @@
     <Filter Include="Tools">
       <UniqueIdentifier>{1358a767-94da-4b49-ae3e-ee6dd34b2070}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Tools\Load Drive">
+      <UniqueIdentifier>{b2c9c96f-6fe9-4280-9044-93c90beefea1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -19,7 +22,6 @@
     <ClInclude Include="function.h" />
     <ClInclude Include="vector.h" />
     <ClInclude Include="xor.h" />
-    <ClInclude Include="util.h" />
     <ClInclude Include="Driver\MemOperations.h">
       <Filter>Driver</Filter>
     </ClInclude>
@@ -48,6 +50,16 @@
     <ClInclude Include="Tools\QR_data.h">
       <Filter>Tools</Filter>
     </ClInclude>
+    <ClInclude Include="Tools\Load Driver\Load_Drive.hpp">
+      <Filter>Tools\Load Drive</Filter>
+    </ClInclude>
+    <ClInclude Include="Tools\Load Driver\kdmapper_data.hpp">
+      <Filter>Tools\Load Drive</Filter>
+    </ClInclude>
+    <ClInclude Include="Tools\Load Driver\driver_data.hpp">
+      <Filter>Tools\Load Drive</Filter>
+    </ClInclude>
+    <ClInclude Include="util.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Apex单透.rc" />

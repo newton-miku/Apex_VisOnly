@@ -96,11 +96,10 @@ CURLcode curl_get_req(const std::string& url, std::string& response, int type)
 		// ¿ªÆôÇëÇó  
 		res = curl_easy_perform(curl);
 		curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &httpcode);
-		cout << "httpcode:" << httpcode << endl;
+		//cout << "httpcode:" << httpcode << endl;
 	}
 	// ÊÍ·Åcurl 
 	curl_easy_cleanup(curl);
-	cout << res << endl;
 	return res;
 }
 string set_version(string getResponseStr,int source) {

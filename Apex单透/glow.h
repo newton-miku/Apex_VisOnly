@@ -1,4 +1,5 @@
 #pragma once
+#include"Driver/MemOperations.h"
 
 extern bool show_shield;
 extern bool player_glow;

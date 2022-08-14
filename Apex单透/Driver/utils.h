@@ -31,4 +31,3 @@ int GetProcessIdByName(std::wstring targetProcessName) {
 	}
 	return 0;
 }
-
