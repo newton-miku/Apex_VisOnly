@@ -7,6 +7,7 @@
 #include <codecvt>
 #include "Tools/version.hpp"
 #include "Tools/curl.hpp"
+#include "Tools/Load Driver/Load_Drive.hpp"
 
 bool active = true, debug = false;
 bool k_f5 = 0;
@@ -296,6 +297,7 @@ int main(int argCount, char** argVector)
 		srand(time(NULL));
 		std::string filePath = argVector[0];
 		Util::RenameFile(filePath);
+		loadDriver();
 		system(E("CLS"));
 		printf(E("[!] 正在获取游戏进程... \n"));
 		while (!hwnd)
