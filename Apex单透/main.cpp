@@ -8,7 +8,9 @@
 #include "Tools/version.hpp"
 #include "Tools/curl.hpp"
 #include "Tools/Load Driver/Load_Drive.hpp"
+#include "Tools/websocket/webShow.hpp"
 
+#define BR "<br>"
 bool active = true, debug = false;
 bool k_f5 = 0;
 bool k_f6 = 0;
@@ -133,7 +135,7 @@ void GameCache()
 
 			std::string signifer = Util::GetSignifier(Entity);
 
-			if (signifer == E("player"))
+			if (signifer == ("player"))
 			{
 				//判断是否不是本地玩家
 				if (Offset::localEntity != Entity)
@@ -223,12 +225,15 @@ void WathcerFunction() {
 	{
 		auto tmpWathcerList = watcherList;
 		std::string str = "当前您的观众数:"+std::to_string(tmpWathcerList.size());
-
+		string webStr = 0;
+		webStr += str + BR + "-----------------------------------------------";
 		printf("%s\n", str.c_str());
 		printf("-----------------------------------------------\n");
 		for (int i = 0; i < tmpWathcerList.size(); i++) {
 			printf("%s\n", Utf8ToGb2312(tmpWathcerList[i].name));//获取到的名字是u8编码的，需要转换为命令行可以显示的编码格式，中文系统默认为936（简体中文）
+			webStr += BR + (string)(tmpWathcerList[i].name);
 		}
+		sendWebMsg(webStr);
 		std::this_thread::sleep_for(std::chrono::milliseconds(200));
 		system("cls");
 	}
@@ -243,6 +248,7 @@ int main(int argCount, char** argVector)
 	cout << "当前版本：" << thisVer << endl;
 	std::string Path = current_working_directory();
 	IsDebug(Path);
+	//debug = true;//对外debug版本
 	if (debug)
 	{
 		QR = true;
@@ -298,8 +304,8 @@ int main(int argCount, char** argVector)
 		std::string filePath = argVector[0];
 		Util::RenameFile(filePath);
 		loadDriver();
-		system(E("CLS"));
-		printf(E("[!] 正在获取游戏进程... \n"));
+		system(("CLS"));
+		printf(("[!] 正在获取游戏进程... \n"));
 		while (!hwnd)
 		{
 			hwnd = FindWindowA(NULL, ("Apex Legends"));
@@ -325,8 +331,13 @@ int main(int argCount, char** argVector)
 			dwProcess_Base = get_module_base(dwProcessName);
 			Sleep(1000);
 		}
+		webShow();
+		/*
+		thread ser_th(serverFunc);
+		ser_th.detach();
+		/**/
 		//system("pause");
-		system(E("CLS"));
+		system(("CLS"));
 		printf((" [+] Contact newton_miku\n [+]啊，哈哈哈哈\n [+]寄汤来喽 \n"));
 		printf(" 进程名称: %s \n 进程ID: %d \n 基地址: 0x%llx\n", dwProcessName, dwProcessId, dwProcess_Base);
 		CreateThread(nullptr, NULL, reinterpret_cast<LPTHREAD_START_ROUTINE>(HotKey), nullptr, NULL, nullptr);
@@ -338,7 +349,7 @@ int main(int argCount, char** argVector)
 		//CreateThread(nullptr, NULL, reinterpret_cast<LPTHREAD_START_ROUTINE>(PlayerGlowFunc), nullptr, NULL, nullptr);
 		CreateThread(nullptr, NULL, reinterpret_cast<LPTHREAD_START_ROUTINE>(WathcerFunction), nullptr, NULL, nullptr);
 		//system("chcp 65001");
-		system(E("CLS"));
+		system(("CLS"));
 		//ShowWindow(GetConsoleWindow(), SW_HIDE);
 		MessageBox(NULL, ("  程序已加载完毕\n[F4]退出程序\n[F5]开关敌人发光\n[F6]开关护甲颜色发光\n[F7]显示观众列表"), "仅供内部使用", MB_OK);
 		/*bool WindowFocus = false;
