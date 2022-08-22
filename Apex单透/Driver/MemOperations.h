@@ -73,7 +73,7 @@ uint64_t get_module_base(const char* module_name, uint64_t readbuffer = 0)
 						return req.sourceAddress;
 					}
 					else {
-						printf(("驱动出错\n"));
+						printf(E("驱动出错\n"));
 						return req.sourceAddress;
 					}
 				}
@@ -85,7 +85,7 @@ uint64_t get_module_base(const char* module_name, uint64_t readbuffer = 0)
 			}
 			else
 			{
-				printf(("驱动出错\n"));
+				printf(E("驱动出错\n"));
 				return req.sourceAddress;
 			}
 		}
@@ -97,7 +97,7 @@ uint64_t get_module_base(const char* module_name, uint64_t readbuffer = 0)
 
 
 	}
-	printf(("驱动出错\n"));
+	printf(E("驱动出错\n"));
 	return req.sourceAddress;
 }
 

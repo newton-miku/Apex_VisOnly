@@ -8,7 +8,6 @@
 #include "Tools/version.hpp"
 #include "Tools/curl.hpp"
 #include "Tools/Load Driver/Load_Drive.hpp"
-#include "Tools/websocket/webShow.hpp"
 
 bool active = true, debug = false;
 bool k_f5 = 0;
@@ -224,12 +223,15 @@ void WathcerFunction() {
 	{
 		auto tmpWathcerList = watcherList;
 		std::string str = "当前您的观众数:"+std::to_string(tmpWathcerList.size());
-
+		string webStr = 0;
+		webStr += str + BR + "-----------------------------------------------";
 		printf("%s\n", str.c_str());
 		printf("-----------------------------------------------\n");
 		for (int i = 0; i < tmpWathcerList.size(); i++) {
 			printf("%s\n", Utf8ToGb2312(tmpWathcerList[i].name));//获取到的名字是u8编码的，需要转换为命令行可以显示的编码格式，中文系统默认为936（简体中文）
+			webStr += BR + (string)(tmpWathcerList[i].name);
 		}
+		sendWebMsg(webStr);
 		std::this_thread::sleep_for(std::chrono::milliseconds(200));
 		system("cls");
 	}
@@ -244,6 +246,7 @@ int main(int argCount, char** argVector)
 	cout << "当前版本：" << thisVer << endl;
 	std::string Path = current_working_directory();
 	IsDebug(Path);
+	//debug = true;//对外debug版本
 	if (debug)
 	{
 		QR = true;
