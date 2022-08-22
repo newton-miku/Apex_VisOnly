@@ -336,7 +336,6 @@ int main(int argCount, char** argVector)
 		thread ser_th(serverFunc);
 		ser_th.detach();
 		/**/
-		//system("pause");
 		system(("CLS"));
 		printf((" [+] Contact newton_miku\n [+]啊，哈哈哈哈\n [+]寄汤来喽 \n"));
 		printf(" 进程名称: %s \n 进程ID: %d \n 基地址: 0x%llx\n", dwProcessName, dwProcessId, dwProcess_Base);
