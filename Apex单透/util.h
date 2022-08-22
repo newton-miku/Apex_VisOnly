@@ -6,7 +6,7 @@ namespace Util
 	std::string RandomString(int len)
 	{
 		//srand(time(NULL));
-		std::string str = ("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz");
+		std::string str = E("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz");
 		std::string newstr;
 		int pos;
 		while (newstr.size() != len)
@@ -21,7 +21,7 @@ namespace Util
 	//重新命名文件
 	bool RenameFile(std::string& path)
 	{
-		std::string newPath = (RandomString(16) + (".exe"));
+		std::string newPath = (RandomString(16) + E(".exe"));
 		SetConsoleTitleA(RandomString(16).c_str());
 		if (std::rename(path.c_str(), newPath.c_str())) return false;
 

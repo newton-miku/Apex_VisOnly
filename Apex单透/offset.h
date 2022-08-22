@@ -61,7 +61,6 @@
 #define OFFSET_GLOW_COLOR_B			OFFSET_GLOW_COLOR_R+0x8			//glow color for Blue
 
 #define METER_TO_FLOAT 3000.0f / 70.0f //meter to float unit
-
 typedef struct player {
 	DWORD_PTR Entity;
 	//std::string name;

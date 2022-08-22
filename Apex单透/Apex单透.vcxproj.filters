@@ -13,9 +13,6 @@
     <Filter Include="Tools\Load Drive">
       <UniqueIdentifier>{b2c9c96f-6fe9-4280-9044-93c90beefea1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Tools\websocket">
-      <UniqueIdentifier>{4c0935a6-3979-4202-98e8-a9640a4b3291}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -63,9 +60,6 @@
       <Filter>Tools\Load Drive</Filter>
     </ClInclude>
     <ClInclude Include="util.h" />
-    <ClInclude Include="Tools\websocket\webShow.hpp">
-      <Filter>Tools\websocket</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Apex单透.rc" />
@@ -78,6 +72,5 @@
     <None Include="Tools\QR.py">
       <Filter>Tools</Filter>
     </None>
-    <None Include="cpp.hint" />
   </ItemGroup>
 </Project>

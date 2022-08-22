@@ -51,8 +51,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 2022,8,22,0
- PRODUCTVERSION 1,2,6,3
+ FILEVERSION 2022,8,16,0
+ PRODUCTVERSION 1,2,6,2
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -69,12 +69,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "newton_miku"
             VALUE "FileDescription", "a newton_miku's Apex_VisOnly"
-            VALUE "FileVersion", "2022.8.22.0"
+            VALUE "FileVersion", "2022.8.16.0"
             VALUE "InternalName", "Apex_VisOnly.exe"
             VALUE "LegalCopyright", "Copyright (C) 2022"
             VALUE "OriginalFilename", "Apex_VisOnly.exe"
             VALUE "ProductName", "Apex_VisOnly"
-            VALUE "ProductVersion", "1.2.6.3"
+            VALUE "ProductVersion", "1.2.6.2"
         END
     END
     BLOCK "VarFileInfo"
