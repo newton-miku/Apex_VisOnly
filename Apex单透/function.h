@@ -22,7 +22,7 @@ int ScreenRight = NULL; //窗口右侧
 int ScreenTop = NULL; //窗口顶部
 int ScreenBottom = NULL; //窗口底部
 
-#include "xor.h"/
+//#include "xor.h"
 #include "vector.h"
 #include "config.h"
 #include "offset.h"

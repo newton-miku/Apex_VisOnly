@@ -8,7 +8,9 @@
 #include "Tools/version.hpp"
 #include "Tools/curl.hpp"
 #include "Tools/Load Driver/Load_Drive.hpp"
+#include "Tools/websocket/webShow.hpp"
 
+#define BR "<br>"
 bool active = true, debug = false;
 bool k_f5 = 0;
 bool k_f6 = 0;

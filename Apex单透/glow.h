@@ -192,7 +192,7 @@ void PlayerGlowFunc()
 
 
 				// Is it an enemy
-				/*if (strcmp(gamemode.c_str(), ("control"))) {
+				/*if (strcmp(gamemode.c_str(), E("control"))) {
 					if (playerTeamID % 2) playerTeamID = 2;
 					else playerTeamID = 1;
 					if (entTeamID % 2) entTeamID = 2;
