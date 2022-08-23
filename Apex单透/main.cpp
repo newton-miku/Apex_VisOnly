@@ -225,20 +225,42 @@ void WathcerFunction() {
 	{
 		auto tmpWathcerList = watcherList;
 		std::string str = "当前您的观众数:"+std::to_string(tmpWathcerList.size());
-		string webStr = 0;
-		webStr += str + BR + "-----------------------------------------------";
+		string webStr = str + BR + "-----------------------------------------------";
+		string tmpname;
 		printf("%s\n", str.c_str());
 		printf("-----------------------------------------------\n");
-		for (int i = 0; i < tmpWathcerList.size(); i++) {
-			printf("%s\n", Utf8ToGb2312(tmpWathcerList[i].name));//获取到的名字是u8编码的，需要转换为命令行可以显示的编码格式，中文系统默认为936（简体中文）
-			webStr += BR + (string)(tmpWathcerList[i].name);
+		if (tmpWathcerList.size() > 0) {
+			for (auto tmpWatcher : tmpWathcerList) {
+				tmpname = tmpWatcher.name;
+				printf("%s\n", Utf8ToGb2312(tmpname.c_str()));//获取到的名字是u8编码的，需要转换为命令行可以显示的编码格式，中文系统默认为936（简体中文）
+				webStr += BR + tmpname;
+			}
 		}
 		sendWebMsg(webStr);
 		std::this_thread::sleep_for(std::chrono::milliseconds(200));
 		system("cls");
 	}
 }
-
+int IsRunning() {
+	while (hwnd && !GetAsyncKeyState(VK_F4))
+	{
+		if (show_watcher) {
+			ShowWindow(GetConsoleWindow(), SW_SHOW);
+		}
+		else
+		{
+			ShowWindow(GetConsoleWindow(), SW_HIDE);
+		}
+		hwnd = FindWindowA(NULL, ("Apex Legends"));
+		if (!hwnd)
+		{
+			running = false;
+			exit(0);
+			return 0;
+		}
+		std::this_thread::sleep_for(std::chrono::milliseconds(300));
+	}
+}
 int main(int argCount, char** argVector)
 {
 	bool QR = false;
@@ -331,11 +353,6 @@ int main(int argCount, char** argVector)
 			dwProcess_Base = get_module_base(dwProcessName);
 			Sleep(1000);
 		}
-		webShow();
-		/*
-		thread ser_th(serverFunc);
-		ser_th.detach();
-		/**/
 		system(("CLS"));
 		printf((" [+] Contact newton_miku\n [+]啊，哈哈哈哈\n [+]寄汤来喽 \n"));
 		printf(" 进程名称: %s \n 进程ID: %d \n 基地址: 0x%llx\n", dwProcessName, dwProcessId, dwProcess_Base);
@@ -347,6 +364,7 @@ int main(int argCount, char** argVector)
 		glow_th.detach();
 		//CreateThread(nullptr, NULL, reinterpret_cast<LPTHREAD_START_ROUTINE>(PlayerGlowFunc), nullptr, NULL, nullptr);
 		CreateThread(nullptr, NULL, reinterpret_cast<LPTHREAD_START_ROUTINE>(WathcerFunction), nullptr, NULL, nullptr);
+		CreateThread(nullptr, NULL, reinterpret_cast<LPTHREAD_START_ROUTINE>(IsRunning), nullptr, NULL, nullptr);
 		//system("chcp 65001");
 		system(("CLS"));
 		//ShowWindow(GetConsoleWindow(), SW_HIDE);
@@ -392,23 +410,7 @@ int main(int argCount, char** argVector)
 				ScreenBottom = TempRect.bottom;
 			}
 		}/**/
-		while (hwnd && !GetAsyncKeyState(VK_F4))
-		{
-			if (show_watcher) {
-				ShowWindow(GetConsoleWindow(), SW_SHOW);
-			}
-			else
-			{
-				ShowWindow(GetConsoleWindow(), SW_HIDE);
-			}
-			hwnd = FindWindowA(NULL, ("Apex Legends"));
-			if (!hwnd)
-			{
-				exit(0);
-				return 0;
-			}
-			std::this_thread::sleep_for(std::chrono::milliseconds(300));
-		}
+		webShow();
 		exit(0);
 		return 0;
 	}

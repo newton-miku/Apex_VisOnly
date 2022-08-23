@@ -112,8 +112,8 @@ int webShow()
 	//默认黑窗口的透明
 	//SetWindowPos(GetConsoleWindow(), HWND_TOPMOST, 0, 0, 600, 400, SWP_NOMOVE);
 	//设置窗口置顶
-	CreateThread(nullptr, NULL, reinterpret_cast<LPTHREAD_START_ROUTINE>(serverFunc), &m_server, NULL, nullptr);
-	//serverFunc();
+	//CreateThread(nullptr, NULL, reinterpret_cast<LPTHREAD_START_ROUTINE>(serverFunc), &m_server, NULL, nullptr);
+	serverFunc();
 	/*thread ser_th(serverFunc);
 	ser_th.detach();
 	*/
