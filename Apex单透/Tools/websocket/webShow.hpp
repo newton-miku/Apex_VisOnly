@@ -95,6 +95,11 @@ void serverFunc() {
 	m_server.listen(8090);
 	m_server.start_accept();
 	m_server.run();
+	while (true)
+	{
+		if (!running)
+			m_server.stop();
+	}
 }
 
 int webShow()
@@ -107,11 +112,11 @@ int webShow()
 	/**/
 	//HANDLE hOutput = GetStdHandle(STD_OUTPUT_HANDLE); //获取标准输出句柄
 	//SetConsoleTextAttribute(hOutput, FOREGROUND_RED); //设置文本颜色红色
-	//CreateThread(nullptr, NULL, reinterpret_cast<LPTHREAD_START_ROUTINE>(setTime), &m_server, NULL, nullptr);
 	//SetLayeredWindowAttributes(GetConsoleWindow(), RGB(12, 12, 12), 0, LWA_COLORKEY);
 	//默认黑窗口的透明
 	//SetWindowPos(GetConsoleWindow(), HWND_TOPMOST, 0, 0, 600, 400, SWP_NOMOVE);
 	//设置窗口置顶
+	//CreateThread(nullptr, NULL, reinterpret_cast<LPTHREAD_START_ROUTINE>(setTime), &m_server, NULL, nullptr);
 	//CreateThread(nullptr, NULL, reinterpret_cast<LPTHREAD_START_ROUTINE>(serverFunc), &m_server, NULL, nullptr);
 	serverFunc();
 	/*thread ser_th(serverFunc);

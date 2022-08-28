@@ -2,20 +2,20 @@
 #include<vector>
 //UPDATED 10/08/2022 (DD/MM/YYYY)
 
-#define OFFSET_KEY_JUMP				0x0759af70						//in_jump
-#define OFFSET_KEY_DUCK				0x0ba1df98						//in_duck
+#define OFFSET_KEY_JUMP				0x0759c070						//in_jump
+#define OFFSET_KEY_DUCK				0x0ba1f098						//in_duck
 
-#define OFFSET_ENTITYLIST 			0x1a73f68						//cl_entitylist
-#define OFFSET_LOCAL_ENT 			0x1e24348						//LocalPlayer local_player
+#define OFFSET_ENTITYLIST 			0x1a75038						//cl_entitylist
+#define OFFSET_LOCAL_ENT 			0x1e25418						//LocalPlayer local_player
 #define OFFSET_ORIGIN				0x014c							//BaseEntity!m_vecAbsOrigin
 #define OFFSET_BONES				0x0e88 + 0x48					//m_nForceBone +0x48 //勿动，不会变化
-#define OFFSET_NAME_LIST			0xba1d550						//NameList
+#define OFFSET_NAME_LIST			0xba1e650						//NameList
 #define OFFSET_NAME					0x0589							//m_iName
 #define OFFSET_SIG_NAME				0x0580							//m_iSignifierName //Useless
-#define OFFSET_GAMEMODE				0x01e5cf90+0x58					//mp_gamemode + 0x58
-#define OFFSET_LEVELNAME			0x13a0798						//LevelName		大厅mp_lobby
+#define OFFSET_GAMEMODE				0x01e5e010+0x58					//mp_gamemode + 0x58
+#define OFFSET_LEVELNAME			0x13a17b8						//LevelName		大厅mp_lobby
 
-#define OFFSET_RENDER				0x7598658						//ViewRender view_render
+#define OFFSET_RENDER				0x7599758						//ViewRender view_render
 #define OFFSET_MATRIX				0x11a210						//ViewMatrix view_matrix
 #define OFFSET_RadarVIEWANGLES		0x1eac							//CPlayer!camera_angles
 #define OFFSET_HEALTH				0x0438							//CPlayer->m_iHealth
@@ -34,20 +34,20 @@
 #define OFFSET_ITEM_ID				0x1628							//[RecvTable.DT_PropSurvival]-> m_customScriptInt
 
 #define OFFSET_CAMERAPOS			0x1ea0							//CPlayer!camera_origin
-#define OFFSET_THIRDPERSON1         0x01e08e80 + 0x6c				//thirdperson_mayamode + 0x6c//0-视角跟随人物视角 !0-人物随意转动视角，镜头视角不转动
-#define OFFSET_THIRDPERSON	        0x01a59420 + 0x6c				//thirdperson_override + 0x6c
+#define OFFSET_THIRDPERSON1         0x01e09f50 + 0x6c				//thirdperson_mayamode + 0x6c//0-视角跟随人物视角 !0-人物随意转动视角，镜头视角不转动
+#define OFFSET_THIRDPERSON	        0x01a5a440 + 0x6c				//thirdperson_override + 0x6c
 #define OFFSET_THIRDPERSONCAM	    0x3608							//m_thirdPersonShoulderView //1开启，0关闭
 
 #define OFFSET_VIEWANGLES			0x24f4 - 0x14					//m_ammoPoolCapacity - 0x14
 #define OFFSET_BREATH_ANGLES		(OFFSET_VIEWANGLES - 0x10)
 #define OFFSET_WEAPON				0x19ec							//m_latestPrimaryWeapons
-#define OFFSET_BULLET_SPEED         0x1eb0							//CWeaponX!m_flProjectileSpeed
+#define OFFSET_BULLET_SPEED         0x1eb8							//CWeaponX!m_flProjectileSpeed
 #define OFFSET_BULLET_GRAVITY		(OFFSET_BULLET_SPEED + 0x8)		
-#define OFFSET_BULLET_SCALE			0x1eb8							//CWeaponX!m_flProjectileScale
+#define OFFSET_BULLET_SCALE			0x1ec0							//CWeaponX!m_flProjectileScale
 #define OFFSET_AMMO_IN_CLIP			0x1624							//CWeaponX!m_ammoInClip		Type-int
 #define OFFSET_IN_RELOADING         0x1666							//CWeaponX!m_bInReload		Type-bool
 
-#define OFFSET_TIMESCALE			0x0141a290						//host_timescale
+#define OFFSET_TIMESCALE			0x0141b2b0						//host_timescale
 
 #define GLOW_DISTANCE				0x0380+0x34						//m_highlightServerFadeEndTimes + 52(0x34)
 #define GLOW_TYPE					0x02c0							//m_highlightFunctionBits

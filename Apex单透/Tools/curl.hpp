@@ -64,8 +64,8 @@ CURLcode curl_get_req(const std::string& url, std::string& response, int type)
 		curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 0);
 
 		//设置ssl验证
-		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, false);
-		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, true);
+		//curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, false);
+		//curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, true);
 
 		//curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, true);
 			//这里的pem文件是http://curl.haxx.se/ca/cacert.pem
@@ -123,7 +123,7 @@ string set_version(string getResponseStr,int source) {
 version get_latestVersion() {
 	int source = 0;
 	string url = "http://ddxnb.tk:8000/?s=App.Version.now";
-	string url1 = "https://www.ddxnb.tk/version.php?type=product";
+	string url1 = "http://www.ddxnb.tk/version.php?type=product";
 	string getResponseStr,verStr;
 	version ver;
 	auto res = curl_get_req(url, getResponseStr, GET_JSON);
