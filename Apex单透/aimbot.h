@@ -35,6 +35,7 @@ namespace Aimbot
             {
                 target_y = -(center_y - y);
                 target_y /= smooth;
+                target_y /= 10;
                 if (target_y + center_y > center_y * 2.f) target_y = 0.f;
             }
 
@@ -42,34 +43,57 @@ namespace Aimbot
             {
                 target_y = y - center_y;
                 target_y /= smooth;
+                target_y /= 10;
                 if (target_y + center_y < 0.f) target_y = 0.f;
             }
         }
 
+        //ÄÚ´æÑ¹Ç¹
+        /*
         Vector3 RecoilVec = Util::GetRecoil(Offset::localEntity);
         if (RecoilVec.x != 0 || RecoilVec.y != 0)
         {
             target_x += RecoilVec.x;
             target_y += RecoilVec.y;
         }
+        /**/
+        
+        if ((GetAsyncKeyState(Config::AimbotKey_Code[Config::AimbotKey]) || GetKeyState(VK_CAPITAL)))
+        {
+            
+                INPUT inputs[1] = {};
+                ZeroMemory(inputs, sizeof(inputs));
 
-        mouse_event(MOUSEEVENTF_MOVE, static_cast<DWORD>(target_x), static_cast<DWORD>(target_y), 0, 0);
+                inputs[0].type = INPUT_MOUSE;
+                inputs[0].mi.dwFlags = MOUSEEVENTF_MOVE;
+                inputs[0].mi.dx = target_x;
+                //inputs[0].mi.dy = target_y;
+
+                int nSize = ARRAYSIZE(inputs);
+                UINT uSent;
+                uSent = SendInput(ARRAYSIZE(inputs), inputs, sizeof(INPUT));
+                /**/
+            //mouse_event(MOUSEEVENTF_MOVE, target_x, target_y,0,0);
+        }
+
     }
 
     void Run()
     {
         while (true)
         {
-            bool isAimbotActive = Config::EnableAimbot && GetAsyncKeyState(Config::AimbotKey_Code[Config::AimbotKey]);
+            bool isAimbotActive = Config::EnableAimbot;
+                //(GetAsyncKeyState(Config::AimbotKey_Code[Config::AimbotKey])|| GetKeyState(VK_CAPITAL));
             if (isAimbotActive)
             {
                 float target_dist = FLT_MAX;
                 DWORD_PTR target_entity = {};
 
-                auto playerList_Copy = Offset::playerList;
+                auto playerList_Copy = Offset::players;
                 for (int i = 0; i < playerList_Copy.size(); i++)
                 {
-                    auto playerEntity = playerList_Copy[i];
+                    if (playerList_Copy[i].teamid == Offset::localTeamID) continue;
+                    auto playerEntity = playerList_Copy[i].Entity;
                     if (!playerEntity) continue;
 
                     //ÅÐ¶ÏÊÇ·ñ±»»÷µ¹
@@ -104,8 +128,9 @@ namespace Aimbot
                     move_to(head_pos.x, head_pos.y);
                 }
             }
-
-            Sleep(10);
+            if (!GetKeyState(VK_NUMLOCK)) {
+                std::this_thread::sleep_for(std::chrono::milliseconds(Config::sleeptime));
+            }
         }
     }
 }

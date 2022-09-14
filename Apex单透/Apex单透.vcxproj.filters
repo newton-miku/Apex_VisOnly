@@ -10,11 +10,11 @@
     <Filter Include="Tools">
       <UniqueIdentifier>{1358a767-94da-4b49-ae3e-ee6dd34b2070}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Tools\Load Drive">
-      <UniqueIdentifier>{b2c9c96f-6fe9-4280-9044-93c90beefea1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Tools\websocket">
       <UniqueIdentifier>{4c0935a6-3979-4202-98e8-a9640a4b3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tools\Load Driver">
+      <UniqueIdentifier>{b2c9c96f-6fe9-4280-9044-93c90beefea1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -54,24 +54,26 @@
       <Filter>Tools</Filter>
     </ClInclude>
     <ClInclude Include="Tools\Load Driver\Load_Drive.hpp">
-      <Filter>Tools\Load Drive</Filter>
+      <Filter>Tools\Load Driver</Filter>
     </ClInclude>
     <ClInclude Include="Tools\Load Driver\kdmapper_data.hpp">
-      <Filter>Tools\Load Drive</Filter>
+      <Filter>Tools\Load Driver</Filter>
     </ClInclude>
     <ClInclude Include="Tools\Load Driver\driver_data.hpp">
-      <Filter>Tools\Load Drive</Filter>
+      <Filter>Tools\Load Driver</Filter>
     </ClInclude>
     <ClInclude Include="util.h" />
     <ClInclude Include="Tools\websocket\webShow.hpp">
       <Filter>Tools\websocket</Filter>
+    </ClInclude>
+    <ClInclude Include="aimbot.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Apex单透.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="D:\Apex hack\ICO\r5apex.ico" />
     <Image Include="..\..\..\ICO\apexH.ico" />
   </ItemGroup>
   <ItemGroup>

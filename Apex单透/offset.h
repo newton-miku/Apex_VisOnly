@@ -32,6 +32,7 @@
 #define OFFSET_BLEED_OUT_STATE		0x2688							//m_bleedoutState,>0 = knocked
 #define OFFSET_VISIBLE_TIME			0x1a44							//CPlayer!lastVisibleTime
 #define OFFSET_ITEM_ID				0x1628							//[RecvTable.DT_PropSurvival]-> m_customScriptInt
+#define OFFSET_ITEM_NAME			0x0030							//m_ModelName
 
 #define OFFSET_CAMERAPOS			0x1ea0							//CPlayer!camera_origin
 #define OFFSET_THIRDPERSON1         0x01e09f50 + 0x6c				//thirdperson_mayamode + 0x6c//0-视角跟随人物视角 !0-人物随意转动视角，镜头视角不转动
@@ -62,6 +63,27 @@
 
 #define METER_TO_FLOAT 3000.0f / 70.0f //meter to float unit
 
+bool k_f5 = 0;
+bool k_f6 = 0;
+bool k_f7 = 0;
+bool k_f8 = 0;
+
+bool k_left = 0;
+bool k_right = 0;
+bool k_up = 0;
+bool k_down = 0;
+
+bool player_glow = true;
+bool show_shield = true;
+
+bool show_watcher = true;
+bool item_glow = false;
+
+float gold_item_col[] = { 0.94f, 1.0f, 0.0f };//金色
+float red_item_col[] = { 1.0f, 0.0f, 0.0f };//红色
+float purple_item_col[] = { 0.588235f, 0.0f, 1.0f };//紫色
+float blue_item_col[] = { 0.2805f, 0.7558f, 1.0f };//蓝色
+
 typedef struct player {
 	DWORD_PTR Entity;
 	//std::string name;
@@ -78,7 +100,7 @@ typedef struct watcher {
 
 namespace Offset
 {
-	std::vector<DWORD_PTR> playerList;
+	//std::vector<DWORD_PTR> playerList;
 	std::vector<watcher> WatchList;
 	std::vector<player> players;
 	int localTeamID;

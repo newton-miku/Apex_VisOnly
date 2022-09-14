@@ -3,7 +3,7 @@
 
 #define GAME_PROCESS_NAME L"r5apex.exe"
 #define TEST_PROCESS_NAME L"EasyAntiCheat_launcher.exe"
-#define DRIVER_FILENAMEW "\\\\.\\Newton39G20220828"
+#define DRIVER_FILENAMEW "\\\\.\\Newton39G20220914-d"
 //#define DRIVER_FILENAMEW "\\\\.\\Fafaki"
 #define IO_READorWRITE_REQUEST CTL_CODE(FILE_DEVICE_UNKNOWN, 0x0391, METHOD_BUFFERED, FILE_SPECIAL_ACCESS)
 #define IO_GET_BASE1 CTL_CODE(FILE_DEVICE_UNKNOWN, 0x0392, METHOD_BUFFERED, FILE_SPECIAL_ACCESS)
@@ -210,6 +210,6 @@ std::string readStr(uint64_t src, int len)
 template <typename type>
 void write(uint64_t dst_addr, type var)
 {
-	type inp = var;
-	writemem(dst_addr, (uint64_t)&inp, sizeof(type));
+	//type inp = var;
+	writemem(dst_addr, (uint64_t)&var, sizeof(type));
 }

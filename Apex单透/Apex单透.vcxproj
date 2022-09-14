@@ -158,6 +158,7 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="aimbot.h" />
     <ClInclude Include="config.h" />
     <ClInclude Include="Driver\MemOperations.h" />
     <ClInclude Include="Driver\utils.h" />
@@ -183,7 +184,6 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\..\ICO\apexH.ico" />
-    <Image Include="D:\Apex hack\ICO\r5apex.ico" />
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />

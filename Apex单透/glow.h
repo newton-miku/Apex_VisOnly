@@ -21,10 +21,39 @@ float entNewVisTime = 0;
 float entOldVisTime[100];
 int visCooldownTime[100];
 
+bool lowHealth = false;
+
 struct GlowMode
 {
 	int8_t GeneralGlowMode, BorderGlowMode, BorderSize, TransparentLevel;
 };
+
+std::string GetGamemode(uintptr_t modBase) {
+	uintptr_t gameModePtr = read<uintptr_t>(modBase + OFFSET_GAMEMODE);
+	return  read<std::string>(gameModePtr);
+}
+std::string GetName(uintptr_t oBaseAddress, uintptr_t Entity, char name[])
+{
+	uintptr_t nameindex = read<uintptr_t>(Entity + 0x38);
+	uintptr_t name_ptr = read<uintptr_t>(oBaseAddress + OFFSET_NAME_LIST + ((nameindex - 1) << 4));
+	std::string names;
+	names = readStr(name_ptr, 128);
+	//printf("%d %d 0x%p 0x%p %s 1\n", sizeof(long long),sizeof(char[64]),nameindex, name_ptr, names.c_str());;
+	strcpy(name, names.c_str());
+	return names;
+}
+int GetTeam(DWORD64 entity) {
+	return read<int>(entity + OFFSET_TEAM);
+}
+
+DWORD64 GetEntityById(int Ent, DWORD_PTR Base)
+{
+	DWORD_PTR EntityList = Base + OFFSET_ENTITYLIST; //updated
+	DWORD_PTR BaseEntity = read<DWORD_PTR>(EntityList);
+	if (!BaseEntity)
+		return NULL;
+	return  read<DWORD_PTR>(EntityList + (Ent << 5));
+}
 
 void player_glow_f(DWORD64 Entity, float* color)
 {
@@ -33,8 +62,10 @@ void player_glow_f(DWORD64 Entity, float* color)
 		write<int>(Entity + OFFSET_GLOW_THROUGH_WALLS, 1); // glow through walls: 2 = enabled, 5 = disabled
 		write<int>(Entity + OFFSET_GLOW_T1, 16256); 
 		write<int>(Entity + OFFSET_GLOW_T2, 1193322764); 
-
-		write<GlowMode>(Entity + GLOW_TYPE, { 12,12,46,95 }); // glow type: GeneralGlowMode, BorderGlowMode, BorderSize, TransparentLevel;
+		if(lowHealth)
+			write<GlowMode>(Entity + GLOW_TYPE, { 3,3,46,95 }); // glow type: GeneralGlowMode, BorderGlowMode, BorderSize, TransparentLevel;
+		else
+			write<GlowMode>(Entity + GLOW_TYPE, { 101,101,46,95 }); // glow type: GeneralGlowMode, BorderGlowMode, BorderSize, TransparentLevel;
 		write<float>(Entity + GLOW_DISTANCE, 1200.0f * METER_TO_FLOAT);//玩家发光距离
 		write<float>(Entity + OFFSET_GLOW_COLOR_R, color[0] * 45); // r color/brightness of enemies
 		write<float>(Entity + OFFSET_GLOW_COLOR_G, color[1] * 45);  // g
@@ -94,35 +125,131 @@ void player_glow_down(DWORD64 Entity, float* color)
 	}
 }
 
-std::string GetGamemode(uintptr_t modBase) {
-	uintptr_t gameModePtr = read<uintptr_t>(modBase + OFFSET_GAMEMODE);
-	return  read<std::string>(gameModePtr);
-}
-std::string GetName(uintptr_t oBaseAddress, uintptr_t Entity, char name[])
+
+void ItemGlowEnableFunc(DWORD64 Entity, float* color)
 {
-	uintptr_t nameindex = read<uintptr_t>(Entity + 0x38);
-	uintptr_t name_ptr = read<uintptr_t>(oBaseAddress + OFFSET_NAME_LIST + ((nameindex - 1) << 4));
-	std::string names;
-	names = readStr(name_ptr, 128);
-	//printf("%d %d 0x%p 0x%p %s 1\n", sizeof(long long),sizeof(char[64]),nameindex, name_ptr, names.c_str());;
-	strcpy(name, names.c_str());
-	return names;
-}
-int GetTeam(DWORD64 entity) {
-	return read<int>(entity + OFFSET_TEAM);
+	write<int>(Entity + OFFSET_GLOW_ENABLE, 1); // glow enable: 1 = enabled, 2 = disabled
+	write<int>(Entity + OFFSET_GLOW_THROUGH_WALLS, 2); // glow through walls: 2 = enabled, 5 = disabled
+	write<GlowMode>(Entity + ITEM_GLOW_TYPE, { 101,101,30,95 }); // glow type: GeneralGlowMode, BorderGlowMode, BorderSize, TransparentLevel;
+	write<int>(Entity + OFFSET_GLOW_T1, 16256);
+	write<int>(Entity + OFFSET_GLOW_T2, 1193322764);
+
+	write<float>(Entity + GLOW_DISTANCE, 150.0f * METER_TO_FLOAT);//物品发光距离
+	write<float>(Entity + OFFSET_GLOW_COLOR_R, color[0] * 100); // r color/brightness
+	write<float>(Entity + OFFSET_GLOW_COLOR_G, color[1] * 100);  // g
+	write<float>(Entity + OFFSET_GLOW_COLOR_B, color[2] * 100); // b
+	//printf("i= %d itemid %d\n", i, itemid);
 }
 
-DWORD64 GetEntityById(int Ent, DWORD_PTR Base)
-{
-	DWORD_PTR EntityList = Base + OFFSET_ENTITYLIST; //updated
-	DWORD_PTR BaseEntity = read<DWORD_PTR>(EntityList);
-	if (!BaseEntity)
-		return NULL;
-	return  read<DWORD_PTR>(EntityList + (Ent << 5));
+void ItemGlowFunc() {
+	string itemName = { 0 };
+	while (1)
+	{
+		if (item_glow) {
+			for (int i = 0; i <= 20000; i++) {
+				DWORD64 Entity = GetEntityById(i, dwProcess_Base);
+				int itemid = read<int>(Entity + OFFSET_ITEM_ID);
+				if (itemid < 0 || itemid>253) continue;
+
+				/*
+				if (itemid < 180 || itemid>183) continue;
+				uintptr_t itemName_ptr = read<uintptr_t>(Entity + OFFSET_ITEM_NAME);
+				itemName = readStr(itemName_ptr, 80);
+				printf("%d\t%s\n", itemid, Utf8ToGb2312(itemName.c_str()));
+				/**/
+				if (1)
+					if (itemid == 233) {
+						ItemGlowEnableFunc(Entity, gold_item_col);
+					}
+				//涡轮
+					else if ((itemid == 178 || itemid == 1 || itemid == 2 || itemid == 37 || itemid == 117))//1-克莱伯 2-敖犬 117-弓 130-暴走
+					{
+						ItemGlowEnableFunc(Entity, red_item_col);
+					}
+				//空投枪和红甲
+					else if (itemid == 254 || itemid == 164) {
+						//|| itemid == 255 || itemid == 187) {
+						if (itemid == 254)
+						{
+							ItemGlowEnableFunc(Entity, blue_item_col);//隔热板
+						}
+						else if (itemid == 164) {
+							ItemGlowEnableFunc(Entity, blue_item_col);//大电
+						}
+						/*else if (itemid == 255) {
+							ItemGlowEnableFunc(Entity, blue_item_col);//重生信标
+						}
+						else if (itemid == 189)
+						{
+							ItemGlowEnableFunc(Entity, blue_item_col);//蓝包
+						}/**/
+					}
+				//蓝色物资
+					else if (itemid == 168 || itemid == 177 || itemid == 182 || itemid == 186 ||
+						itemid == 169 || itemid == 174 || itemid == 183 || itemid == 187) {
+						if (itemid == 168 || itemid == 177 || itemid == 182 || itemid == 186)
+						{
+							ItemGlowEnableFunc(Entity, purple_item_col);//紫装备
+						}
+						else if (itemid == 169 || itemid == 174 || itemid == 183 || itemid == 187)//头甲盾包
+						{
+							ItemGlowEnableFunc(Entity, gold_item_col);//金装备
+						}
+					}
+				//紫金装备
+					else if (itemid == 203	//枪管
+						|| itemid == 207	//激光瞄准器
+						|| itemid == 210	//轻型
+						|| itemid == 214	//重型
+						|| itemid == 218	//能量
+						|| itemid == 222	//狙击
+						|| itemid == 226	//枪栓
+						|| itemid == 229	//枪托
+						|| itemid == 232	//狙枪托
+						//紫配件
+						|| itemid == 211	//轻型 
+						|| itemid == 215	//重型
+						|| itemid == 219	//能量 
+						|| itemid == 223	//狙击
+						) {//金配件
+						if (itemid == 203 //枪管
+							|| itemid == 207 //激光瞄准器
+							|| itemid == 210 //轻型
+							|| itemid == 214 //重型
+							|| itemid == 218 //能量
+							|| itemid == 222 //狙击
+							|| itemid == 226 //枪栓
+							|| itemid == 229 //枪托
+							|| itemid == 232) {//狙枪托
+							ItemGlowEnableFunc(Entity, purple_item_col);//紫配件
+						}
+						else if (itemid == 211	//轻型 
+							|| itemid == 215	//重型
+							|| itemid == 219	//能量 
+							|| itemid == 223) {	//狙击
+							ItemGlowEnableFunc(Entity, gold_item_col);//金配件
+						}
+					}
+				//紫金配件
+					/*else if ((itemid == 6 || itemid == 11 || itemid == 21 || itemid == 26 || itemid == 31 || itemid == 36 || itemid == 46
+						|| itemid == 51 || itemid == 56 || itemid == 62 || itemid == 67 || itemid == 73 || itemid == 78 || itemid == 83 || itemid == 88 || itemid == 94
+						|| itemid == 99 || itemid == 104 || itemid == 109 || itemid == 114 || itemid == 119 || itemid == 131 || itemid == 136))
+					{
+						ItemGlowEnableFunc(Entity, gold_item_col);//金枪
+					}
+				//金枪
+				/**/
+			}
+			this_thread::sleep_for(chrono::milliseconds(3000));
+		}
+	}
 }
 
-float* Set_Color(int shield_type,int shield_health, float* &set_color) {
+float* Set_Color(int shield_type,int shield_health,int health, float* &set_color) {
 	float* color = 0;
+	if (50 > shield_health + health) lowHealth = true;
+	else lowHealth = 0;
+
 	if (show_shield) {
 		if (shield_health == 0) {
 			color = WHITE;
@@ -189,6 +316,7 @@ void PlayerGlowFunc()
 				//Get shield type
 				int shield_type = read<int>(Entity + OFFSET_SHIELD_TYPE);
 				int shield_health = read<int>(Entity + OFFSET_SHIELD);
+				int health = read<int>(Entity + OFFSET_HEALTH);
 
 
 				// Is it an enemy
@@ -226,7 +354,7 @@ void PlayerGlowFunc()
 							//unvisible enemie color
 							if (entKnockedState == 0)
 							{
-								Set_Color(shield_type, shield_health, color);
+								Set_Color(shield_type, shield_health, health, color);
 								player_glow_f(Entity, color);
 							}
 							else

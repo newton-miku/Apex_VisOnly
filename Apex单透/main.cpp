@@ -12,14 +12,7 @@
 
 #define BR "<br>"
 bool active = true, debug = false;
-bool k_f5 = 0;
-bool k_f6 = 0;
-bool k_f7 = 0;
 
-bool player_glow = true;
-bool show_shield = true;
-
-bool show_watcher = true;
 
 
 std::wstring UTF8ToWide(const std::string& source)
@@ -64,10 +57,10 @@ bool IsKeyDown(int vk)
 void HotKey() {
 	while (1) {
 
-		/*if (IsKeyDown(VK_F4))
+		if (IsKeyDown(VK_F4))
 		{
 			active = false;
-		}*/
+		}
 
 		if (IsKeyDown(VK_F5) && k_f5 == 0)//F5 敌人发光
 		{
@@ -89,7 +82,6 @@ void HotKey() {
 			k_f6 = 0;
 		}
 
-		
 		if (IsKeyDown(VK_F7) && k_f7 == 0)//F7 观众列表
 		{
 			k_f7 = 1;
@@ -98,7 +90,79 @@ void HotKey() {
 		else if (!IsKeyDown(VK_F7) && k_f7 == 1)
 		{
 			k_f7 = 0;
-		}/**/
+		}
+
+		if (IsKeyDown(VK_F8) && k_f8 == 0)//F8 物品发光
+		{
+			k_f8 = 1;
+			item_glow = !item_glow;
+		}
+		else if (!IsKeyDown(VK_F8) && k_f8 == 1)
+		{
+			k_f8 = 0;
+		}
+		/*
+		if (IsKeyDown(VK_LEFT) && k_left == 0)//←减小平滑
+		{
+			k_left = 1;
+			if (Config::AimbotSmooth <= 1) {
+				continue;
+			}
+			else
+			{
+				Config::AimbotSmooth --;
+			}
+		}
+		else if (!IsKeyDown(VK_LEFT) && k_left == 1)
+		{
+			k_left = 0;
+		}
+		if (IsKeyDown(VK_RIGHT) && k_right == 0)//→ 增加平滑
+		{
+			k_right = 1;
+			if (Config::AimbotSmooth >= 30) {
+				continue;
+			}
+			else
+			{
+				Config::AimbotSmooth++;
+			}
+		}
+		else if (!IsKeyDown(VK_RIGHT) && k_right == 1)
+		{
+			k_right = 0;
+		}
+		if (IsKeyDown(VK_UP) && k_up == 0)//↑ 增加FOV
+		{
+			k_up = 1;
+			if (Config::AimbotFOV <= 50) {
+				continue;
+			}
+			else
+			{
+				Config::AimbotFOV +=10;
+			}
+		}
+		else if (!IsKeyDown(VK_UP) && k_up == 1)
+		{
+			k_up = 0;
+		}
+		if (IsKeyDown(VK_DOWN) && k_down == 0)//↓ 减小FOV
+		{
+			k_down = 1;
+			if (Config::AimbotFOV >= 300) {
+				continue;
+			}
+			else
+			{
+				Config::AimbotFOV -=10;
+			}
+		}
+		else if (!IsKeyDown(VK_DOWN) && k_down == 1)
+		{
+			k_down = 0;
+		}
+		/**/
 
 	}
 }
@@ -227,6 +291,7 @@ void WathcerFunction() {
 		std::string str = "当前您的观众数:"+std::to_string(tmpWathcerList.size());
 		string webStr = str + BR + "-----------------------------------------------";
 		string tmpname,u8name;
+		//cout << "[上下]\tFOV:" << Config::AimbotFOV << endl << "[左右]\t平滑：" << Config::AimbotSmooth << endl;
 		if(tmpWathcerList.size()>0)
 			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 124);
 		else
@@ -238,8 +303,7 @@ void WathcerFunction() {
 			for (auto tmpWatcher : tmpWathcerList) {
 				tmpname = tmpWatcher.name;
 				printf("%s\n", Utf8ToGb2312(tmpname.c_str()));//获取到的名字是u8编码的，需要转换为命令行可以显示的编码格式，中文系统默认为936（简体中文）
-				u8name = Utf8ToGb2312(tmpname.c_str());
-				webStr += BR + u8name;
+				webStr += BR + tmpname;
 			}
 		}
 		sendWebMsg(webStr);
@@ -275,9 +339,53 @@ void set_window() {
 	SetLayeredWindowAttributes(GetConsoleWindow(), RGB(12, 12, 12), 0, LWA_COLORKEY);//默认黑窗口的透明
 	SetWindowPos(GetConsoleWindow(), HWND_TOPMOST, 0, 0, 600, 400, SWP_NOMOVE);//设置窗口置顶
 }
+void GetScreen() {
+	bool WindowFocus = false;
+	gameHWND=hwnd;
+	while (WindowFocus == false)
+	{
+		DWORD ForegroundWindowProcessID;
+		GetWindowThreadProcessId(GetForegroundWindow(), &ForegroundWindowProcessID);
+		if (Util::GetProcessId(dwProcessName) == ForegroundWindowProcessID)
+		{
+
+			hwnd = GetForegroundWindow();
+
+			RECT TempRect;
+			GetClientRect(hwnd, &TempRect);
+			ScreenWidth = TempRect.right;
+			ScreenHeight = TempRect.bottom;
+			ScreenLeft = TempRect.left;
+			ScreenRight = TempRect.right;
+			ScreenTop = TempRect.top;
+			ScreenBottom = TempRect.bottom;
+
+			WindowFocus = true;
+		}
+	}
+
+	static RECT OldRect;
+	while (TRUE)
+	{
+		RECT TempRect;
+
+		GetClientRect(hwnd, &TempRect);
+
+		if (TempRect.left != OldRect.left || TempRect.right != OldRect.right || TempRect.top != OldRect.top || TempRect.bottom != OldRect.bottom)
+		{
+			OldRect = TempRect;
+			ScreenWidth = TempRect.right;
+			ScreenHeight = TempRect.bottom;
+			ScreenLeft = TempRect.left;
+			ScreenRight = TempRect.right;
+			ScreenTop = TempRect.top;
+			ScreenBottom = TempRect.bottom;
+		}
+	}
+}
 int main(int argCount, char** argVector)
 {
-	bool QR = false;
+	bool QR = false,verOK=false;
 	version ver;
 	string latestVer,thisVer;
 	thisVer = get_thisVersion();
@@ -288,6 +396,7 @@ int main(int argCount, char** argVector)
 	if (debug)
 	{
 		QR = true;
+		item_glow = true;
 	}
 	else {
 		ver = get_latestVersion();
@@ -304,14 +413,26 @@ int main(int argCount, char** argVector)
 			latestVer = ver.ver;
 		}
 		if (strcmp(thisVer.c_str(), latestVer.c_str()) != 0) {
-			//system("cls");
-			cout << "当前版本：" << thisVer << endl<<"最新版本："<<latestVer<<endl;
-			cout << "请升级最新版本" << endl;
-			getchar();
-			QR = false;
-			return 1;
+			if (strcmp("3.9.3.9", latestVer.c_str()) == 0)
+			{
+				cout << "当前版本：" << thisVer << endl << "当前为开放版本模式，暂时不做在线版本验证" << endl;
+				verOK = true;
+			}
+			else
+			{
+				cout << "当前版本：" << thisVer << endl << "最新版本：" << latestVer << endl;
+				cout << "请升级最新版本" << endl;
+				verOK = false;
+				getchar();
+				QR = false;
+				return 1;
+			}
 		}
-		else {
+		else
+		{
+			verOK = true;
+		}
+		if(verOK) {
 			//以下为验证程序
 			int Verify_return = verify(Path);
 			if (Verify_return != 1)
@@ -368,66 +489,29 @@ int main(int argCount, char** argVector)
 			dwProcess_Base = get_module_base(dwProcessName);
 			Sleep(1000);
 		}
+		oBaseAddress = dwProcess_Base;
 		thread ser_th(serverFunc);
 		ser_th.detach();
 		system(("CLS"));
 		printf((" [+] Contact newton_miku\n [+]啊，哈哈哈哈\n [+]寄汤来喽 \n"));
 		printf(" 进程名称: %s \n 进程ID: %d \n 基地址: 0x%llx\n", dwProcessName, dwProcessId, dwProcess_Base);
 		CreateThread(nullptr, NULL, reinterpret_cast<LPTHREAD_START_ROUTINE>(HotKey), nullptr, NULL, nullptr);
-		//CreateThread(nullptr, NULL, reinterpret_cast<LPTHREAD_START_ROUTINE>(GameCache), nullptr, NULL, nullptr);
+		//CreateThread(nullptr, NULL, reinterpret_cast<LPTHREAD_START_ROUTINE>(Aimbot::Run), nullptr, NULL, nullptr);
 		std::thread gamecache_th(GameCache);
 		gamecache_th.detach();
 		std::thread glow_th(PlayerGlowFunc);
 		glow_th.detach();
 		//CreateThread(nullptr, NULL, reinterpret_cast<LPTHREAD_START_ROUTINE>(PlayerGlowFunc), nullptr, NULL, nullptr);
 		CreateThread(nullptr, NULL, reinterpret_cast<LPTHREAD_START_ROUTINE>(WathcerFunction), nullptr, NULL, nullptr);
+		CreateThread(nullptr, NULL, reinterpret_cast<LPTHREAD_START_ROUTINE>(ItemGlowFunc), nullptr, NULL, nullptr);
 		//CreateThread(nullptr, NULL, reinterpret_cast<LPTHREAD_START_ROUTINE>(IsRunning), nullptr, NULL, nullptr);
 		//system("chcp 65001");
 		system(("CLS"));
 		//ShowWindow(GetConsoleWindow(), SW_HIDE);
 		MessageBox(NULL, ("  程序已加载完毕\n[F4]退出程序\n[F5]开关敌人发光\n[F6]开关护甲颜色发光\n[F7]显示观众列表"), "仅供内部使用", MB_OK);
-		/*bool WindowFocus = false;
-		while (WindowFocus == false)
-		{
-			DWORD ForegroundWindowProcessID;
-			GetWindowThreadProcessId(GetForegroundWindow(), &ForegroundWindowProcessID);
-			if (Util::GetProcessId(dwProcessName) == ForegroundWindowProcessID)
-			{
-
-				gameHWND = GetForegroundWindow();
-
-				RECT TempRect;
-				GetClientRect(gameHWND, &TempRect);
-				ScreenWidth = TempRect.right;
-				ScreenHeight = TempRect.bottom;
-				ScreenLeft = TempRect.left;
-				ScreenRight = TempRect.right;
-				ScreenTop = TempRect.top;
-				ScreenBottom = TempRect.bottom;
-
-				WindowFocus = true;
-			}
-		}
-
-		static RECT OldRect;
-		while (TRUE)
-		{
-			RECT TempRect;
-
-			GetClientRect(gameHWND, &TempRect);
-
-			if (TempRect.left != OldRect.left || TempRect.right != OldRect.right || TempRect.top != OldRect.top || TempRect.bottom != OldRect.bottom)
-			{
-				OldRect = TempRect;
-				ScreenWidth = TempRect.right;
-				ScreenHeight = TempRect.bottom;
-				ScreenLeft = TempRect.left;
-				ScreenRight = TempRect.right;
-				ScreenTop = TempRect.top;
-				ScreenBottom = TempRect.bottom;
-			}
-		}/**/
+		/**/
 		//webShow();
+		CreateThread(nullptr, NULL, reinterpret_cast<LPTHREAD_START_ROUTINE>(GetScreen), nullptr, NULL, nullptr);
 		while (hwnd && !GetAsyncKeyState(VK_F4))
 		{
 			if (show_watcher) {

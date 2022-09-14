@@ -15,8 +15,8 @@ DWORD dwProcessId = NULL;
 uint64_t dwProcess_Base = NULL;
 HWND gameHWND = NULL;
 
-int ScreenWidth = NULL; //窗口宽度
-int ScreenHeight = NULL; //窗口高度
+int ScreenWidth = 1920; //窗口宽度
+int ScreenHeight = 1080; //窗口高度
 int ScreenLeft = NULL; //窗口左侧
 int ScreenRight = NULL; //窗口右侧
 int ScreenTop = NULL; //窗口顶部
