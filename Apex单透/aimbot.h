@@ -50,7 +50,7 @@ namespace Aimbot
 
         //ÄÚ´æÑ¹Ç¹
         /*
-        Vector3 RecoilVec = Util::GetRecoil(Offset::localEntity);
+        Vec3 RecoilVec = Util::GetRecoil(Offset::localEntity);
         if (RecoilVec.x != 0 || RecoilVec.y != 0)
         {
             target_x += RecoilVec.x;

@@ -23,7 +23,7 @@
     <Keyword>Win32Proj</Keyword>
     <ProjectGuid>{3a1d0d94-aaae-485f-b069-0ea6753fc402}</ProjectGuid>
     <RootNamespace>Apex单透</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.22000.0</WindowsTargetPlatformVersion>
     <ProjectName>Apex单透</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -52,6 +52,7 @@
     <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
+    <UseOfMfc>false</UseOfMfc>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -143,6 +144,8 @@
       <Optimization>MaxSpeed</Optimization>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -152,21 +155,34 @@
       <AdditionalDependencies>ws2_32.lib;winmm.lib;wldap32.lib;Advapi32.lib;Crypt32.lib;libcurl.lib;libssl.lib;libcrypto.lib;jsoncpp_static.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
+      <AdditionalOptions> /FORCE:MULTIPLE %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="aimassist.cpp" />
+    <ClCompile Include="aimbot.cpp" />
+    <ClCompile Include="Driver\nt.cpp" />
+    <ClCompile Include="Header Files\solver.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="aimbot.h" />
     <ClInclude Include="config.h" />
     <ClInclude Include="Driver\MemOperations.h" />
+    <ClInclude Include="Driver\nt.h" />
+    <ClInclude Include="Driver\ntos.h" />
     <ClInclude Include="Driver\utils.h" />
     <ClInclude Include="function.h" />
     <ClInclude Include="glow.h" />
+    <ClInclude Include="Header Files\aimassist.hpp" />
+    <ClInclude Include="Header Files\item.h" />
+    <ClInclude Include="Header Files\pid.hpp" />
+    <ClInclude Include="Header Files\solver.hpp" />
+    <ClInclude Include="Header Files\time.h" />
+    <ClInclude Include="Header Files\vec3.h" />
     <ClInclude Include="offset.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Tools\curl.hpp" />
+    <ClInclude Include="Tools\decode.hpp" />
     <ClInclude Include="Tools\Load Driver\driver_data.hpp" />
     <ClInclude Include="Tools\Load Driver\kdmapper_data.hpp" />
     <ClInclude Include="Tools\Load Driver\Load_Drive.hpp" />

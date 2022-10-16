@@ -19,6 +19,18 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="aimbot.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Header Files\solver.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="aimassist.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Driver\nt.cpp">
+      <Filter>Driver</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="config.h" />
@@ -32,12 +44,6 @@
       <Filter>Driver</Filter>
     </ClInclude>
     <ClInclude Include="resource.h" />
-    <ClInclude Include="glow.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="offset.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Tools\verify.h">
       <Filter>Tools</Filter>
     </ClInclude>
@@ -66,8 +72,38 @@
     <ClInclude Include="Tools\websocket\webShow.hpp">
       <Filter>Tools\websocket</Filter>
     </ClInclude>
-    <ClInclude Include="aimbot.h">
+    <ClInclude Include="Tools\decode.hpp">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="Header Files\item.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Header Files\time.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="glow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="offset.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Header Files\aimassist.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Header Files\pid.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Header Files\solver.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Header Files\vec3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Driver\nt.h">
+      <Filter>Driver</Filter>
+    </ClInclude>
+    <ClInclude Include="Driver\ntos.h">
+      <Filter>Driver</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

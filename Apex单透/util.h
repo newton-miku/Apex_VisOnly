@@ -1,5 +1,21 @@
+#ifndef _UTIL_H
+#define _UTIL_H
+#pragma once
 #include <TlHelp32.h>
-#include "Driver/MemOperations.h"
+//#include "function.h"
+
+uintptr_t GetWeaponEntity(uintptr_t Entity)
+{
+	DWORD64 LastWeapon = read<DWORD64>(Entity + OFFSET_WEAPON) & 0xFFFF;
+	DWORD64 WeaponEntity = read<DWORD64>(oBaseAddress + OFFSET_ENTITYLIST + (LastWeapon << 5));
+	/*uint64_t weapon = read<uint64_t>(Base + OFFSET_WEAPON);
+	weapon &= 0xffff;
+	uintptr_t WeaponEntity = read<uintptr_t>(oBaseAddress + Offset::cl_entitylist + (weapon << 5));
+	/**/
+	if (!WeaponEntity)
+		return 0;
+	return  WeaponEntity;
+}
 namespace Util
 {
 	//È¡Ëæ»úÊý
@@ -76,12 +92,12 @@ namespace Util
 		write<Vector3>(entity + Offset::m_Viewangles, angles);
 	}
 
-	float lastVisibleTimeList[64];
+	
 	bool IsVisible(DWORD_PTR entity, int i)
 	{
-		float visibleTime = read<float>(entity + Offset::lastVisibleTime);
+		float visibleTime = read<float>(entity + OFFSET_VISIBLE_TIME);
 
-		bool is_visible = visibleTime > lastVisibleTimeList[i] && visibleTime > 0.f;
+		bool is_visible = (visibleTime != lastVisibleTimeList[i]);//&& visibleTime > 0.f);
 
 		lastVisibleTimeList[i] = visibleTime;
 
@@ -90,13 +106,12 @@ namespace Util
 
 	Vector3 GetEntityBasePosition(DWORD_PTR entity)
 	{
-		return read<Vector3>(entity + Offset::m_vecAbsOrigin);
+		return read<Vector3>(entity + OFFSET_ORIGIN);
 	}
-
 	Vector3 GetEntityBonePosition(DWORD_PTR entity, int id)
 	{
 		Vector3 BasePosition = GetEntityBasePosition(entity);
-		DWORD_PTR Bone = read<DWORD_PTR>(entity + Offset::m_bones);
+		DWORD_PTR Bone = read<DWORD_PTR>(entity + OFFSET_BONES);
 		Vector3 bonePosition = {};
 
 		bonePosition.x = read<float>(Bone + 0xCC + (id * 0x30)) + BasePosition.x;
@@ -106,9 +121,13 @@ namespace Util
 		return bonePosition;
 	}
 
-	std::string GetSignifier(DWORD_PTR entity)
+	Vector3 GetVelocity(uint64_t entity) {
+		return read<Vector3>(entity + OFFSET_ENTITY_VELOCITY);
+	}
+
+	std::string GetSignifier(uintptr_t entity)
 	{
-		uintptr_t SignifierAddr = read<uintptr_t>(entity + Offset::m_iSignifierName);
+		uintptr_t SignifierAddr = read<uintptr_t>(entity + OFFSET_SIG_NAME);
 
 		char buf[64] = { 0 };
 		readmem(SignifierAddr, (uint64_t)&buf, 64);
@@ -118,10 +137,10 @@ namespace Util
 
 	D3DMATRIX getViewMatrix()
 	{
-		DWORD_PTR viewRenderer = read<DWORD_PTR>(dwProcess_Base + Offset::ViewRender);
+		DWORD_PTR viewRenderer = read<DWORD_PTR>(dwProcess_Base + OFFSET_RENDER);
 		if (!viewRenderer) return D3DMATRIX{};
 
-		DWORD_PTR viewMatrix = read<DWORD_PTR>(viewRenderer + Offset::ViewMatrix);
+		DWORD_PTR viewMatrix = read<DWORD_PTR>(viewRenderer + OFFSET_MATRIX);
 		if (!viewMatrix) return D3DMATRIX{};
 
 		D3DMATRIX m = read<D3DMATRIX>(viewMatrix);
@@ -163,3 +182,4 @@ namespace Util
 		return _worldToScreenPos;
 	}
 }
+#endif

@@ -1,9 +1,11 @@
 #pragma once
+#ifndef _DRIVE
+#define _DRIVE
 #include "utils.h"
 
 #define GAME_PROCESS_NAME L"r5apex.exe"
 #define TEST_PROCESS_NAME L"EasyAntiCheat_launcher.exe"
-#define DRIVER_FILENAMEW "\\\\.\\Newton39G20220914-d"
+#define DRIVER_FILENAMEW "\\\\.\\Newton39G20221014-d"
 //#define DRIVER_FILENAMEW "\\\\.\\Fafaki"
 #define IO_READorWRITE_REQUEST CTL_CODE(FILE_DEVICE_UNKNOWN, 0x0391, METHOD_BUFFERED, FILE_SPECIAL_ACCESS)
 #define IO_GET_BASE1 CTL_CODE(FILE_DEVICE_UNKNOWN, 0x0392, METHOD_BUFFERED, FILE_SPECIAL_ACCESS)
@@ -103,8 +105,18 @@ uint64_t get_module_base(const char* module_name, uint64_t readbuffer = 0)
 
 int Init()
 {
-	//hDriver = CreateFileA(DRIVER_FILENAMEW, GENERIC_ALL, FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+	/*std::wstring wname;
+	if (nt::find_sym_link(L"\\DEVICE", L"Newton39G2022", wname))
+	{
+		std::wstring sys_name = L"\\\\.\\" + wname;
+		hDriver = CreateFileW(sys_name.c_str(), GENERIC_ALL, FILE_SHARE_READ | FILE_SHARE_WRITE, 0, OPEN_EXISTING, 0, 0);
+	}
+	else
+	/**/
+	{
 	hDriver = CreateFileA(DRIVER_FILENAMEW, GENERIC_ALL, FILE_SHARE_READ | FILE_SHARE_WRITE, 0, OPEN_EXISTING, 0, 0);
+	}
+	//hDriver = CreateFileA(DRIVER_FILENAMEW, GENERIC_ALL, FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
 	GAME_PROCESS_ID = GetProcessIdByName(GAME_PROCESS_NAME);
 	/*if (GAME_PROCESS_ID == 0) {
 		printf("正在查询测试程序\n");
@@ -130,28 +142,30 @@ void readmem(void* addresstoread, void* buffer, uint32_t size)
 	ReadVirtualMemory(hDriver, GAME_PROCESS_ID, (uint64_t)addresstoread, (uint64_t)buffer, size);
 	//SockRequest((uint64_t)addresstoread, (uint64_t)buffer, size);
 
-}
-void readmem(uint64_t dst_addr, uint64_t src_addr, size_t size)
+}/**/
+bool readmem(uint64_t dst_addr, uint64_t src_addr, size_t size)
 {
 	if (hDriver == INVALID_HANDLE_VALUE)
-		return;
+		return 0;
 	KERNEL_READorWRITE_REQUEST request{ GAME_PROCESS_ID,GetCurrentProcessId(), dst_addr, src_addr, size };
 	DWORD bytes_read;
-	DeviceIoControl(hDriver, IO_READorWRITE_REQUEST, &request, sizeof(KERNEL_READorWRITE_REQUEST), 0, 0, &bytes_read, 0);
+	return DeviceIoControl(hDriver, IO_READorWRITE_REQUEST, &request, sizeof(KERNEL_READorWRITE_REQUEST), 0, 0, &bytes_read, 0);
 
-}void writemem(uint64_t dst_addr, uint64_t src_addr, size_t size)
+}bool writemem(uint64_t dst_addr, uint64_t src_addr, size_t size)
 {
 	if (hDriver == INVALID_HANDLE_VALUE)
-		return;
+		return 0;
+	
 	KERNEL_READorWRITE_REQUEST request;
 	request.sourceProcessId = GetCurrentProcessId();
 	request.sourceAddress = src_addr;
 	request.destProcessId = GAME_PROCESS_ID;
 	request.destAddress = dst_addr;
 	request.Size = size;
+	/**/
 	//KERNEL_READorWRITE_REQUEST request{ GetCurrentProcessId(), GAME_PROCESS_ID, src_addr, dst_addr, size };
 	DWORD bytes_read;
-	DeviceIoControl(hDriver, IO_READorWRITE_REQUEST, &request, sizeof(KERNEL_READorWRITE_REQUEST), 0, 0, &bytes_read, 0);
+	return DeviceIoControl(hDriver, IO_READorWRITE_REQUEST, &request, sizeof(KERNEL_READorWRITE_REQUEST), 0, 0, &bytes_read, 0);
 
 }
 void readmem(uint64_t addresstoread, void* buffer, uint32_t size)
@@ -187,6 +201,12 @@ type read(uint64_t src)
 	readmem(src, (uint64_t)&ret, sizeof(type));
 	return ret;
 }
+template <typename type>
+type read_array(uint64_t src,type* array,size_t len)
+{
+	readmem(src, &array, sizeof(type)*len);
+	return ret;
+}
 
 template <typename type>
 type read(uint64_t src, int len)
@@ -208,8 +228,9 @@ std::string readStr(uint64_t src, int len)
 }
 
 template <typename type>
-void write(uint64_t dst_addr, type var)
+bool write(uint64_t dst_addr, type var)
 {
-	//type inp = var;
-	writemem(dst_addr, (uint64_t)&var, sizeof(type));
+	type inp = var;
+	return writemem(dst_addr, (uint64_t)&inp, sizeof(type));
 }
+#endif

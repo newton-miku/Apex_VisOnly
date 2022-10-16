@@ -10,6 +10,8 @@
 #include <d3dx9.h>
 #pragma comment(lib, "d3d9.lib")
 
+#ifndef _FUNCTION_H
+#define _FUNCTION_H
 const char* dwProcessName = "r5apex.exe";
 DWORD dwProcessId = NULL;
 uint64_t dwProcess_Base = NULL;
@@ -21,12 +23,40 @@ int ScreenLeft = NULL; //´°¿Ú×ó²à
 int ScreenRight = NULL; //´°¿ÚÓÒ²à
 int ScreenTop = NULL; //´°¿Ú¶¥²¿
 int ScreenBottom = NULL; //´°¿Úµ×²¿
+#endif
 
-//#include "xor.h"
+#ifndef _DRIVE
+#include "Driver/MemOperations.h"
+#endif 
+
+#ifndef _VECTOR_H
 #include "vector.h"
+#endif
+#ifndef _CONFIG_H
 #include "config.h"
-#include "offset.h"
-#include "util.h"
-#include "glow.h"
-#include "aimbot.h"
+#endif
 
+#ifndef _OFFSET_H
+#include "offset.h"
+#endif
+
+#ifndef _UTIL_H
+#include "util.h"
+#endif
+/*
+#ifndef _AIMASSIST_HPP
+#include "Header Files/aimassist.hpp"
+#endif
+
+//#ifndef _AIMBOT_HPP
+#include "Header Files/aimbot.hpp"
+//#endif
+
+#ifndef _AIMBOT_CPP
+#include "aimbot.cpp""
+#endif
+
+#ifndef _GLOW_H
+#include"glow.h"
+#endif
+/**/
